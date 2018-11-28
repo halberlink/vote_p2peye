@@ -1,0 +1,21 @@
+.inseredPeople {
+  width: 800px;
+  margin:0 auto;
+  border:1px solid #ebeef5;
+  border-bottom: none;
+}
+.insert {
+  width: 800px;
+  margin:0 auto;
+}
+.el-select  {
+  width: 100%;
+}
+.el-textarea {
+  .el-textarea__inner {
+    min-height: 140px!important;
+  }
+}
+.top,.bottom,.sub {
+  margin-bottom:20px;
+}
