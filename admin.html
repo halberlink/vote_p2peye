@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script type="text/javascript" src="https://www.p2peye.com/static/scripts/lib/jquery.1.8.3.js"></script>
+</head>
+
+<body>
+<ul class="peoples-list">
+	
+</ul>
+<div>
+	<input type="text" name="name" placeholder="被投人姓名" />
+	<select name="job">
+		<option value="0">职位</option>
+		<option value="1">前端</option>
+		<option value="2">PHP</option>
+		<option value="3">JAVA</option>
+		<option value="4">IOS</option>
+		<option value="5">Android</option>
+		<option value="6">测试</option>
+		<option value="7">运维</option>
+	</select>
+	<textarea name="reason" placeholder="推荐理由"></textarea>
+	<input onclick="submit()" type="button" name="" value="提交">
+</div>
+<script type="text/javascript">
+
+	var regiserpostting = false;
+	function submit(){
+		if(regiserpostting) return;
+		var uname = $.trim($('input[name=name]').val());
+		if(uname == ''){
+			alert('请填写被投人姓名');
+			return;
+		}
+
+		var job = $('select[name=job] option:selected').val();
+
+		if(job < 1){
+			alert('请填写被投人的职位');
+			return ;
+		}
+
+		var reason = $.trim($('textarea[name=reason]').val());
+
+		if(reason == ''){
+			alert('请填写推荐理由');
+			return;
+		}
+
+		regiserpostting = true;
+
+
+		$.ajax({
+			url : '/server/insert.php',
+			data : {
+				name : uname,
+				job : job,
+				reason : reason
+			},
+			type : 'post',
+			dataType : 'json',
+			success : function(ret){
+				if(ret.code == 200){
+					alert('添加成功');
+					insertPeople(ret.data);
+					regiserpostting = false;
+					$('input[name=name]').val('');
+					$('textarea[name=reason]').val('');
+					$('select[name=job] option').eq(0).click();
+					$("select[name=job] option:first").prop("selected", 'selected');
+				}else if(ret.code == 4010){
+					alert('已存在');
+
+				}else{
+					alert('异常');
+				}
+				
+			}
+		})
+	}
+	function insertPeople(data){
+		var html = [];
+		for(var i in data){
+			html.push('<li>'+data[i].name+''+data[i].job+'</li>');
+		}
+
+		$('.peoples-list').append(html.join(''));
+
+	}
+	function getPeoples(){
+		$.ajax({
+			url : '/server/getAllpeoples.php',
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				console.log(ret);
+				insertPeople(ret.data);
+			}
+		})
+	}
+	getPeoples();
+</script>
+</body>
+</html>
