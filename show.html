@@ -12,8 +12,12 @@
 	
 </ul>
 
-<input class="beginpoll" onclick="beginPoll()" type="button" name="" value="开启活动" style="display: none;" />
+<input class="beginpoll" onclick="beginPoll()" type="button" name="" value="开启活动" />
+<input class="nextpoll" onclick="nextPoll()" type="button" name="" value="下一位" />
+
 <script type="text/javascript">
+
+
 
     function beginPoll(){
     	$.ajax({
@@ -24,10 +28,49 @@
 			type : 'get',
 			dataType : 'json',
 			success : function(ret){
-				
+				if(ret.code == 200){
+
+				}
 			}
 		});
     }
+
+
+    function nextPoll(){
+    	$.ajax({
+			url : '/server/webs.php',
+			data:{
+				type : 'next'
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				if(ret.code == 200){
+
+				}
+			}
+		});
+    }
+
+    function socket(){
+    	$.ajax({
+			url : '/server/webs.php',
+			data:{
+				type : 'webs'
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				if(ret.code == 200){
+					console.log(ret);
+					setTimeout(socket,2000);
+				}
+			}
+		});
+
+    }
+
+    socket();
 
 
 
@@ -54,6 +97,8 @@
 	}
 
 	getPollStatus();
+
+
 	function insertPeople(data){
 		var html = [];
 		for(var i in data){
@@ -69,7 +114,6 @@
 			type : 'get',
 			dataType : 'json',
 			success : function(ret){
-				console.log(ret);
 				insertPeople(ret.data);
 			}
 		})
