@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<script type="text/javascript" src="https://www.p2peye.com/static/scripts/lib/jquery.1.8.3.js"></script>
+</head>
+
+<body>
+<h1>活动状态:<span class="poll-status"></span></h1>
+<ul class="peoples-list">
+	
+</ul>
+
+<input class="beginpoll" onclick="beginPoll()" type="button" name="" value="开启活动" style="display: none;" />
+<script type="text/javascript">
+
+    function beginPoll(){
+    	$.ajax({
+			url : '/server/webs.php',
+			data:{
+				type : 'begin'
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				
+			}
+		});
+    }
+
+
+
+	function getPollStatus(){
+		$.ajax({
+			url : '/server/getStatus.php',
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				if(ret.code == 200){
+					if(ret.data == 1){
+						$('.poll-status').html('未开始');
+						$('.beginpoll').show();
+
+					}else if(ret.data == 2){
+						$('.poll-status').html('进行中');
+					}else{
+						$('.poll-status').html('已结束');
+					}
+				}
+			}
+		})
+
+	}
+
+	getPollStatus();
+	function insertPeople(data){
+		var html = [];
+		for(var i in data){
+			html.push('<li>'+data[i].name+''+data[i].job+'</li>');
+		}
+
+		$('.peoples-list').append(html.join(''));
+
+	}
+	function getPeoples(){
+		$.ajax({
+			url : '/server/getAllpeoples.php',
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				console.log(ret);
+				insertPeople(ret.data);
+			}
+		})
+	}
+	getPeoples();
+</script>
+</body>
+</html>
