@@ -6,7 +6,8 @@ $name = $_POST['name'];
 $reason = $_POST['reason'];
 $job = $_POST['job'];
 
-if(!$name || $reason || $job){
+
+if(!$name || !$reason || !$job){
 	echo json_encode(array("code"=>"4008","data"=>'',"message"=>"缺少必要参数"));exit;	
 }
 
