@@ -12,19 +12,6 @@
 </div>
 <script type="text/javascript">
 
-	var ws = new WebSocket("ws://192.168.5.154:4000");
-	function createSocket(){
-        ws.onopen = function(){
-            console.log("握手成功");
-        }
-        ws.onmessage = function(e){
-        	console.log(1111);
-            console.log("message:" + e.data);
-        }
-        ws.onerror = function(){
-            console.log("error");
-        }
-    }
 
 
 
@@ -56,6 +43,25 @@
 
 	}
 
+	function socket(){
+    	$.ajax({
+			url : '/server/webs.php',
+			data:{
+				type : 'webs'
+			},
+			type : 'get',
+			dataType : 'json',
+			success : function(ret){
+				if(ret.code == 200){
+					setTimeout(socket,2000);
+				}
+			}
+		});
+
+    }
+
+    
+
 	var uid = localStorage.getItem('uid');
 
 	if(!uid){
@@ -63,7 +69,7 @@
 	}else{
 		//window.location.href = '/';
 
-		createSocket();
+		socket();
 
 
 	}
