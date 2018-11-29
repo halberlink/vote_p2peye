@@ -11,6 +11,12 @@ Vue.config.productionTip = false
 Vue.use(Element, { size: 'small', zIndex: 3000 });
 Vue.prototype.$http = axios;
 Vue.prototype.$qs = qs;
+
+
+String.prototype.trim = function(){
+  //从空格开始（至少一个空格），中间任意个字符，从空格结束（至少一个空格）
+  return this.replace(/^\s+(.*?)\s+$/,'$1');
+}
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
   if (to.meta.title) {

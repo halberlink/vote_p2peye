@@ -103,7 +103,8 @@
             label:"运维"
           }
         ],
-        PeopleData: []
+        PeopleData: [],
+        lock:false
       }
     },
     created:function(){
@@ -120,8 +121,14 @@
     methods:{
       addPeople:function(){
         var _this = this;
-
-        if(this.nameValue == "" && this.jobValue == "" && this.reasonValue== ""){
+        if(this.lock){
+          _this.$message({
+            message: "添加中请稍后..",
+            type: 'success'
+          });
+          return;
+        }
+        if(this.nameValue == "" && this.jobValue =="" && this.reasonValue ==""){
           _this.$message({
             message: "请填写信息",
             type: 'error'
@@ -135,13 +142,13 @@
             type: 'error'
           });
           return;
-        }else if(this.jobValue == ""){
+        }else if(this.jobValue ==""){
           _this.$message({
             message: "员工职位不能为空",
             type: 'error'
           });
           return;
-        }else {
+        }else if(this.reasonValue ==""){
           _this.$message({
             message: "推荐理由不能为空",
             type: 'error'
@@ -149,12 +156,14 @@
           return;
         }
         var Data = {
-          name : this.nameValue,
+          name : this.nameValue.trim(),
           job : this.jobValue,
-          reason : this.reasonValue
+          reason : this.reasonValue.trim()
         };
 
         var postData = this.$qs.stringify(Data);
+
+        this.lock = true;
         this.$http.post("http://192.168.9.215/server/insert.php",postData,{
           headers:{'Content-Type':'application/x-www-form-urlencoded'}
         }).then(function(res){
@@ -170,9 +179,9 @@
               type: 'error'
             });
           }
-
+          _this.lock = false;
         }).catch(function(res){
-
+          _this.lock = false;
           _this.$message({
             message: "服务异常，请稍后再试",
             type: 'warning'
