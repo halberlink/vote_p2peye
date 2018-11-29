@@ -33,6 +33,7 @@
 			success : function(ret){
 				if(ret.code == 200){
 					localStorage.setItem('uid',ret.data[0].id);
+					socket();
 				}else{
 					alert(ret.message);
 				}
