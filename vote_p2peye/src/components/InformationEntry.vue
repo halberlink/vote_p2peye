@@ -1,16 +1,17 @@
 <template>
   <div class="InformationEntry">
+    <h1>员工信息录入</h1>
     <div class="insert">
       <div class="top">
         <el-row :gutter="20">
           <el-col :span="12">
             <div class="grid-content bg-purple">
-              <el-input v-model="input" placeholder="请输入内容"></el-input>
+              <el-input v-model="nameValue" placeholder="请输入员工姓名"></el-input>
             </div>
           </el-col>
           <el-col :span="12">
             <div class="grid-content bg-purple">
-              <el-select v-model="jovValue" placeholder="请选择">
+              <el-select v-model="jobValue" placeholder="请选择员工职位">
                 <el-option
                   v-for="item in jobs"
                   :key="item.value"
@@ -26,7 +27,7 @@
         <el-row :gutter="20">
           <el-col :span="24">
             <div class="grid-content bg-purple">
-              <el-input v-model="input" type="textarea" placeholder="请输入内容"></el-input>
+              <el-input v-model="reasonValue" type="textarea" placeholder="请输入推荐理由"></el-input>
             </div>
           </el-col>
         </el-row>
@@ -45,18 +46,18 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="date"
-          label="日期"
-          width="180">
-        </el-table-column>
-        <el-table-column
           prop="name"
           label="姓名"
           width="180">
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="地址">
+          prop="job"
+          label="职位"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="reason"
+          label="推荐理由">
         </el-table-column>
       </el-table>
     </div>
@@ -69,8 +70,9 @@
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
-        input:"",
-        jovValue: '',
+        nameValue:"",
+        jobValue: '',
+        reasonValue:'',
         jobs:[
           {
             value:1,
@@ -101,55 +103,81 @@
             label:"运维"
           }
         ],
-        PeopleData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+        PeopleData: []
       }
+    },
+    created:function(){
+      var _this = this;
+      this.$http.post("http://192.168.9.215/server/getAllpeoples.php",{},{
+        headers:{'Content-Type':'application/x-www-form-urlencoded'}
+      }).then(function(res){
+        _this.PeopleData = res.data.data
+
+      }).catch(function(res){
+
+      });
     },
     methods:{
       addPeople:function(){
+        var _this = this;
 
-        this.$http.post("/server/insert.php",postData,{
+        if(this.nameValue == "" && this.jobValue == "" && this.reasonValue== ""){
+          _this.$message({
+            message: "请填写信息",
+            type: 'error'
+          });
+          return;
+        }
+
+        if(this.nameValue == ""){
+          _this.$message({
+            message: "员工姓名不能为空",
+            type: 'error'
+          });
+          return;
+        }else if(this.jobValue == ""){
+          _this.$message({
+            message: "员工职位不能为空",
+            type: 'error'
+          });
+          return;
+        }else {
+          _this.$message({
+            message: "推荐理由不能为空",
+            type: 'error'
+          });
+          return;
+        }
+        var Data = {
+          name : this.nameValue,
+          job : this.jobValue,
+          reason : this.reasonValue
+        };
+
+        var postData = this.$qs.stringify(Data);
+        this.$http.post("http://192.168.9.215/server/insert.php",postData,{
           headers:{'Content-Type':'application/x-www-form-urlencoded'}
         }).then(function(res){
-          res = res.data;
-          _this.$loading.hide();
-          if(res.code && res.code == 200){
-            _this.$toast(res.message);
-            _this.$router.back(-1)
+          if(res.data.code == 200){
+            _this.PeopleData.push(Data);
+            _this.$message({
+              message: '添加成功',
+              type: 'success'
+            });
           }else{
-            _this.$toast(res.message);
+            _this.$message({
+              message: res.data.message,
+              type: 'error'
+            });
           }
 
         }).catch(function(res){
-          _this.$loading.hide();
-          _this.$toast("网络错误请稍后再试",2000)
+
+          _this.$message({
+            message: "服务异常，请稍后再试",
+            type: 'warning'
+          });
+
         });
       }
     }
