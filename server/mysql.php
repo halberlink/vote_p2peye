@@ -1,7 +1,5 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-
 function conntentMysql($query,$sqlType){
 
 	$mysql_conf = array(

@@ -6,7 +6,7 @@
  * Date: 2018/11/30
  * Time: 14:47
  */
-
+include 'Library.php';
 
 //创建websocket服务器对象，监听0.0.0.0:9527端口
 $ws = new swoole_websocket_server("0.0.0.0", 9527);
@@ -25,13 +25,18 @@ $ws->on('open', function ($ws, $request) {
     echo "connected! open{$request->fd}." . PHP_EOL;
 });
 
+$M = new module();
+
 //监听WebSocket消息事件
 $ws->on('message', function ($ws, $frame) {
     $msg = 'from' . $frame->fd . ":{$frame->data}\n";
     $sourceFd = $ws->fds->get($frame->fd);
-    echo $msg;
+
+    $ret = module::socket($frame->data);
+    var_dump($ret);
+
     foreach ($ws->fds as $fd=>$fd_data) {
-        $ws->push($fd, $sourceFd["name"] . ": " . $frame->data);
+        $ws->push($fd, $ret);
     }
 });
 

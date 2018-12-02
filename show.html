@@ -52,25 +52,25 @@
 		});
     }
 
-    function socket(){
-    	$.ajax({
-			url : '/server/webs.php',
-			data:{
-				type : 'webs'
-			},
-			type : 'get',
-			dataType : 'json',
-			success : function(ret){
-				if(ret.code == 200){
-					console.log(ret);
-					setTimeout(socket,2000);
-				}
-			}
-		});
+  //   function socket(){
+  //   	$.ajax({
+		// 	url : '/server/webs.php',
+		// 	data:{
+		// 		type : 'webs'
+		// 	},
+		// 	type : 'get',
+		// 	dataType : 'json',
+		// 	success : function(ret){
+		// 		if(ret.code == 200){
+		// 			console.log(ret);
+		// 			setTimeout(socket,2000);
+		// 		}
+		// 	}
+		// });
 
-    }
+  //   }
 
-    socket();
+  //   socket();
 
 
 

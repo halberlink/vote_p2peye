@@ -12,7 +12,24 @@
 </div>
 <script type="text/javascript">
 
+	ws=new WebSocket("ws://192.168.5.154:9527");
+	ws.onmessage=function(event){console.log(event.data);}
 
+	ws.onopen = function()
+	{
+	  console.log("open");
+	  var data = {
+			type : 'register',
+			data : {
+				name : '1',
+				age : '2'
+			}
+		}
+
+		ws.send(JSON.stringify(data));
+	};
+
+	
 
 
 	var regiserpostting = false;
@@ -70,7 +87,7 @@
 	}else{
 		//window.location.href = '/';
 
-		socket();
+		//socket();
 
 
 	}
