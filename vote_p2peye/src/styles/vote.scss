@@ -1,0 +1,124 @@
+.ui-waitvote {
+  font-size: 20px;
+  .ui-Candidate {
+    width:1140px;
+
+    margin:0 auto;
+    background: #ffffff;
+    padding: 0 50px;
+    padding-bottom: 20px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 16px;
+    margin-bottom:20px;
+    position: relative;
+    min-height: 360px;
+    .ui-people {
+      width:650px;
+      padding:0 20px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .face {
+      width: 120px;
+      height: 120px;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      background: #947ee8;
+      margin-right:20px;
+      position: relative;
+    }
+    .face-icon {
+      position: absolute;
+      right: -40px;
+      top:-20px;
+    }
+    .face-icon-new{
+      width:60px;
+      height:50px;
+      background: url("../assets/new-icon.png") no-repeat center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
+    .face-icon-old{
+      width:60px;
+      height:50px;
+      background: url("../assets/old-icon.png") no-repeat center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
+    .info {
+      width:340px;
+      padding-top: 70px;
+      text-align: left;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .info-item{
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+  .enter-key {
+    width: 215px;
+    height: 202px;
+    background: url("../assets/enter-icon.png") no-repeat center;
+    position: absolute;
+    bottom:30px;
+    right:30px;
+    cursor: pointer;
+  }
+  .ui-judges {
+    width:1140px;
+    margin:0 auto;
+    background: #ffffff;
+    padding: 0 50px;
+    padding-bottom: 20px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 16px;
+    margin-bottom:20px;
+    .ui-list {
+
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .ui-list-item {
+      width:184px;
+      height:100px;
+      position: relative;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .ui-chair {
+      width:137px;
+      height:90px;
+      background: url("../assets/chair.png") no-repeat center;
+      background-size: 100% 100%;
+    }
+    .ui-voted {
+      position: absolute;
+      top:50%;
+      left:50%;
+      width:100px;
+      height:100px;
+      margin-left:-50px;
+      margin-top:-50px;
+      background: url("../assets/voted.png") no-repeat center;
+      background-size: cover;
+    }
+    .ui-name {
+      line-height: 62px;
+      color: #fff;
+      font-size: 25px;
+    }
+  }
+}

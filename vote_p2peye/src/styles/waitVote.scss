@@ -1,0 +1,98 @@
+.ui-waitvote {
+  font-size: 20px;
+  .ui-Candidate {
+    width:1140px;
+
+    margin:0 auto;
+    background: #ffffff;
+    padding: 0 50px;
+    padding-bottom: 20px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 16px;
+    margin-bottom:20px;
+    position: relative;
+    min-height: 360px;
+    .ui-list {
+      padding-left: 25px;
+      width:950px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .ui-list-item {
+      width:190px;
+      height:50px;
+      margin-bottom:10px;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      display: flex;
+    }
+    .ui-face {
+      align-items: center;
+      width:50px;
+      height:50px;
+      background: #947ee8;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      margin-right:15px;
+    }
+  }
+  .enter-key {
+    width: 215px;
+    height: 202px;
+    background: url("../assets/enter-icon.png") no-repeat center;
+    position: absolute;
+    bottom:30px;
+    right:30px;
+    cursor: pointer;
+  }
+  .ui-judges {
+    width:1140px;
+    margin:0 auto;
+    background: #ffffff;
+    padding: 0 50px;
+    padding-bottom: 20px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 16px;
+    margin-bottom:20px;
+    .ui-list {
+
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .ui-list-item {
+      width:184px;
+      height:100px;
+      position: relative;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .ui-chair {
+      width:137px;
+      height:90px;
+      background: url("../assets/chair.png") no-repeat center;
+      background-size: 100% 100%;
+    }
+    .ui-voted {
+      position: absolute;
+      top:50%;
+      left:50%;
+      width:100px;
+      height:100px;
+      margin-left:-50px;
+      margin-top:-50px;
+      background: url("../assets/voted.png") no-repeat center;
+      background-size: cover;
+    }
+    .ui-name {
+      line-height: 62px;
+      color: #fff;
+      font-size: 25px;
+    }
+  }
+}

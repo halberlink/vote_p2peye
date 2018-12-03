@@ -1,0 +1,86 @@
+.ui-tjinfo {
+  font-size: px2rem(30px);
+  .ui-tj {
+    width:px2rem(690px);
+    height:px2rem(410px);
+    margin:0 auto;
+    background: #ffffff;
+    padding-bottom: px2rem(20px);
+    -webkit-border-radius: px2rem(8px);
+    -moz-border-radius: px2rem(8px);
+    border-radius: px2rem(16px);
+    margin-bottom:px2rem(20px);
+    .ui-tit {
+      margin-bottom: px2rem(5px);
+    }
+    .ui-people {
+      width:px2rem(650px);
+      padding:0 px2rem(20px);
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+    .face {
+      width: px2rem(120px);
+      height: px2rem(120px);
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      background: #947ee8;
+      margin-right:px2rem(20px);
+      position: relative;
+    }
+    .face-icon {
+      position: absolute;
+      right: px2rem(-40px);
+      top:px2rem(-20px);
+    }
+    .face-icon-new{
+      width:px2rem(60px);
+      height:px2rem(50px);
+      background: url("../assets/new-icon.png") no-repeat center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
+    .face-icon-old{
+      width:px2rem(60px);
+      height:px2rem(50px);
+      background: url("../assets/old-icon.png") no-repeat center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
+    .info {
+      width:px2rem(340px);
+      padding-top: px2rem(70px);
+      text-align: left;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .info-item{
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .ui-des {
+    width:px2rem(690px);
+    margin:0 auto;
+    background: #ffffff;
+    padding-bottom: px2rem(20px);
+    -webkit-border-radius: px2rem(8px);
+    -moz-border-radius: px2rem(8px);
+    border-radius: px2rem(16px);
+    margin-bottom:px2rem(20px);
+    .des{
+      width:px2rem(650px);
+      text-align: left;
+      padding:0 px2rem(20px);
+      text-indent: px2rem(60px);
+      padding-bottom: 20px;
+    }
+  }
+}
