@@ -53,21 +53,25 @@ var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
     // next({
     //   path:"/waitVote_m"
     // })
-    if(sessionStorage.getItem("User")){
+    if(localStorage.getItem("USER")){
 
       next({
-        path:"/waitVote_m"
+        path:"/index"
       })
 
 
     }else{
       next({
-        path:"/indexM"
+        path:"/index_m"
       })
     }
 
 
-  }else {
+  }else if(to.path === '/vote' && (isiOS || isAndroid)) {
+    next({
+      path:"/vote_m"
+    })
+  }else{
     next()
   }
 

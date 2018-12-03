@@ -5,6 +5,7 @@ import indexM from '@/components/index_m'
 import waitVote from '@/components/waitVote'
 import waitVote_m from '@/components/waitVote_m'
 import tjInfo_m from '@/components/tjInfo_m'
+import tjInfo from '@/components/tjInfo'
 import vote_m from '@/components/vote_m'
 import vote from '@/components/vote'
 import InformationEntry from '@/components/InformationEntry'
@@ -47,6 +48,14 @@ export default new Router({
       component: waitVote_m,
       meta:{
         title: '等待投票'
+      }
+    },
+    {
+      path: '/tjInfo',
+      name: 'tjInfo',
+      component: tjInfo,
+      meta:{
+        title: '推荐人信息'
       }
     },
     {

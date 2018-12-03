@@ -7,7 +7,7 @@
       <div class="ui-tit">候选人</div>
       <div class="ui-people">
         <div class="face">
-          <div class="face-icon-new face-icon"></div>
+          <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="info">
           <div class="info-item">
@@ -19,32 +19,18 @@
             <div class="info-item-value">{{peopleInfo.job}}</div>
           </div>
           <div class="info-item">
-            <div class="info-item-key">入职时间：</div>
-            <div class="info-item-value">2018-12-01</div>
-          </div>
-          <div class="info-item">
-            <div class="info-item-key">推荐人：</div>
-            <div class="info-item-value">张某某</div>
-          </div>
-          <div class="info-item">
             <div class="info-item-key">类别 ：</div>
             <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
             <div class="info-item-value" v-else>老员工</div>
           </div>
-        </div>
-      </div>
-      <div class="enter-key"></div>
-    </div>
-    <div class="ui-judges">
-      <div class="ui-tit">评委席</div>
-      <div class="ui-list">
-        <div class="ui-list-item" v-for="item in jugeList">
-          <div class="ui-chair">
-            <div class="ui-name">{{item.uname}}</div>
+          <div class="info-item">
+            <div class="info-item-key">推荐语：</div>
+            <div class="info-item-value">{{peopleInfo.reason}}</div>
           </div>
-          <div class="ui-voted" v-if="item.vote_status == 1"></div>
+
         </div>
       </div>
+      <div class="enter-key" @click="nextStep"></div>
     </div>
   </div>
 
@@ -53,25 +39,32 @@
 <script>
   import { Toast } from 'mint-ui';
   export default {
-    name: 'vote',
+    name: 'tjInfo',
     data () {
       return {
         username:"",
         password:'',
         lock:false,
         openSocket:false,
-        jugeList:[],
-        peopleInfo:{}
+        peopleInfo:{type:1}
       }
     },
     created:function(){
       this.initWebSocket();
     },
     methods:{
-      jumpTo:function(url){
-        this.$router.push(url)
-      },
-      register:function() {
+      nextStep:function() {
+        if(this.openSocket){
+          this.websocketsend({
+            "interface":"startVote",
+            "data":""
+          })
+        }else{
+          this.$message({
+            message: "socket未连接",
+            type: 'error'
+          });
+        }
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = {};
@@ -114,7 +107,9 @@
             //获取进程状态
             if(event.code == 200){
 
-              this.jugeList = event.data.online;
+              this.$store.commit("changevote",{
+                status:event.data.status
+              })
               this.peopleInfo = event.data.ing[0];
 
             }else{
@@ -125,10 +120,14 @@
             }
 
             break;
-          case "vote":
+          case "startVote":
             //获取进程状态
             if(event.code == 200){
-
+              localStorage.setItem("status",event.data.status);
+              this.$store.commit("changevote",{
+                status:event.data.status
+              })
+              this.$router.push("/vote");
             }else{
               _this.$message({
                 message: event.message,
@@ -137,7 +136,6 @@
             }
 
             break;
-
         }
       },
 
