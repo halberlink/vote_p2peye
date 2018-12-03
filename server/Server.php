@@ -17,15 +17,39 @@ $fds->column("name", swoole_table::TYPE_STRING, 32);
 $fds->create();
 $ws->fds = $fds;
 
+$M = new module();
+
 ////监听WebSocket连接打开事件
 $ws->on('open', function ($ws, $request) {
     //增加链接数
     $fd = $request->fd;
-    $ws->fds->set($fd, ["fd" => $fd, "name" => "Client({$fd})"]);
-    echo "connected! open{$request->fd}." . PHP_EOL;
-});
+    $server = $request->server;
+    $uid = $server['query_string'];
 
-$M = new module();
+    $ws->fds->set($fd, ["fd" => $fd, "name" => $uid]);
+    echo "connected! open{$request->fd}." . PHP_EOL;
+
+    $leadersOnline=array();
+
+    foreach ($ws->fds as $fd=>$fd_data) {
+
+        array_push($leadersOnline,$fd_data);
+    }
+
+    module::$onlinePeoples = json_encode($leadersOnline);
+
+    $res = array("interface"=>"info","data"=>"");
+
+    $ret = module::socket(json_encode($res));
+
+
+
+    foreach ($ws->fds as $fd=>$fd_data) {
+
+        $ws->push($fd, $ret);
+    }
+
+});
 
 //监听WebSocket消息事件
 $ws->on('message', function ($ws, $frame) {
@@ -33,8 +57,6 @@ $ws->on('message', function ($ws, $frame) {
     $sourceFd = $ws->fds->get($frame->fd);
 
     $ret = module::socket($frame->data);
-    var_dump($ret);
-
     foreach ($ws->fds as $fd=>$fd_data) {
         $ws->push($fd, $ret);
     }
