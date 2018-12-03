@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import countList from '@/components/countList'
+import countList from '@/components/common/countList'
 import Index from '@/components/index'
 import indexM from '@/components/index_m'
 import waitVote from '@/components/waitVote'
