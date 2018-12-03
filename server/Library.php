@@ -87,6 +87,10 @@ class module
 			case 'start' :
 				$jsonCallback = self::_start($data['data'],'start');
 				break;
+			case 'startVote' :
+				$jsonCallback = self::_startVote($data['data'],'startVote');
+			case 'vote' :
+				$jsonCallback = self::_vote($data['data'],'vote');
 		}
 
 		return $jsonCallback;
@@ -96,9 +100,45 @@ class module
 		return json_encode(array("interface"=> $interfaceType,"code"=>$code,"data"=>$data,"message"=>$message));
 	}
 
-	public function _start($data,$interfaceType)
+	public static function resetJob($type){
+
+		$_reset = '';
+
+		switch ($type) {
+	        case 1:
+	            $_reset = '前端';
+	            break;
+	        case 2:
+	            $_reset = 'PHP';
+	            break;
+	        case 3:
+	            $_reset = 'JAVA';
+	            break;
+	        case 4:
+	            $_reset = 'IOS';
+	            break;
+	        case 5:
+	            $_reset = 'Android';
+	            break;
+	        case 6:
+	            $_reset = '测试';
+	            break;
+	        case 7:
+	            $_reset = '运维';
+	            break;
+	        default:
+	        	$_reset = '前端';
+	            break;
+	    }
+
+	    return $_reset;
+	}
+
+
+
+	public static function _start($data,$interfaceType)
 	{
-		$status = self::$redis->set("poll_status","2");
+		self::$redis->set("poll_status","2");
 		$status = self::$redis->get("poll_status");
 
 		$res = self::queryMysql("select * from peoples where status ='0'");
@@ -114,6 +154,39 @@ class module
 		}
 
 	}
+
+	public static function _startVote($data,$interfaceType){
+		$res = self::queryMysql("select * from peoples where status ='1'")[0];
+		$res = self::queryMysql("UPDATE peoples SET status='2' where name = '".$res['name']."'");
+
+		if($res){
+			return self::formartCode($interfaceType,200,array("status"=>$res),"success!");
+		}else{
+			return self::formartCode($interfaceType,4001,array(),"error!");
+		}
+	}
+
+	public static function _vote($data,$interfaceType){
+
+		$res = self::queryMysql("select * from poll where from_id ='".$data['from_id']."' AND to_id = '".$data['to_id']."'")[0];
+
+		if(!empty($res)){
+			return self::formartCode($interfaceType,4001,'',"投过了");
+		}
+
+		$res = self::queryMysql("INSERT INTO poll (from_id,to_id,count) VALUES ('".$data['from_id']."','".$data['to_id']."','".$data['count']."') ");
+
+		if($res){
+			$res = self::queryMysql("select * from poll where from_id ='".$data['from_id']."' AND to_id = '".$data['to_id']."'");
+			return self::formartCode($interfaceType,200,$res,"success!");	
+		}else{
+			return self::formartCode($interfaceType,4002,$res,"error!");	
+		}
+
+
+	}
+
+
 
 	public static function _info($data,$interfaceType){
 
@@ -131,14 +204,36 @@ class module
 
 		$res['online'] = array();
 
+		$ing = self::queryMysql("select * from peoples where status ='2'");
+
+		if($ing && !empty($ing)){
+			$ing = $ing[0];
+		}
+
+
+
 		foreach ($data as $key => $item) {
 
 			$uid = $data[$key]['name'];
+
 
 			if($uid > 0){
 
 				$ret = self::queryMysql("select * from users where id ='".$uid."'");
 
+				if(!empty($ing)){
+					$ing = self::queryMysql("select * from poll where from_id ='".$uid."'")[0];
+
+					if($ing){
+						$ret[0]['vote_status'] = 1;
+					}else{
+						$ret[0]['vote_status'] = 0;
+					}
+
+				}
+
+
+				
 				array_push($res['online'],$ret[0]);
 
 			}
@@ -148,7 +243,29 @@ class module
 
 	    if($res['status'] == 2){
 
-	    	$res['ing'] = self::queryMysql("select * from peoples where status ='1'");
+	    	$res['ing'] = self::queryMysql("select * from peoples where status ='1' OR status='2'");
+
+	    	foreach($res['ing'] as $key => $item){
+
+
+				$res['ing'][$key]['job'] = self::resetJob($item['job']);
+
+			}
+
+			$res['history'] = self::queryMysql("select * from poll");
+
+			foreach($res['history'] as $key => $item){
+
+				$target = self::queryMysql("select * from peoples where id = '".$item['to_id']."'");
+				$target = $target[0];
+
+				$target['job'] = self::resetJob($target['job']);
+
+
+				$res['history'][$key]['to_info'] = $target;
+
+			}
+
 
 	    }
 
@@ -205,37 +322,16 @@ class module
 			return self::formartCode($interfaceType,200,$res,"success");	
 		}
 	}
+
 	//获取已录入候选人
 	public static function _getPeoples($data,$interfaceType){
 		$res = self::queryMysql("select * from peoples");
 
 		
 		foreach($res as $key => $item){
-		    switch ($item['job']) {
-		        case 1:
-		            $res[$key]['job'] = '前端';
-		            break;
-		        case 2:
-		            $res[$key]['job'] = 'PHP';
-		            break;
-		        case 3:
-		            $res[$key]['job'] = 'JAVA';
-		            break;
-		        case 4:
-		            $res[$key]['job'] = 'IOS';
-		            break;
-		        case 5:
-		            $res[$key]['job'] = 'Android';
-		            break;
-		        case 6:
-		            $res[$key]['job'] = '测试';
-		            break;
-		        case 7:
-		            $res[$key]['job'] = '运维';
-		            break;
-		        default:
-		            break;
-		    }
+
+			$res[$key]['job'] = self::resetJob($item['job']);
+
 		}
 		return self::formartCode($interfaceType,200,$res,"success!");
 	}
