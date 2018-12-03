@@ -32,12 +32,16 @@
       </div>
       <div class="enter-key" @click="nextStep"></div>
     </div>
+    <div class="countList">
+      <DataList :dataList="sortList"></DataList>
+    </div>
   </div>
 
 </template>
 
 <script>
   import { Toast } from 'mint-ui';
+  import DataList from './countList.vue'
   export default {
     name: 'tjInfo',
     data () {
@@ -46,7 +50,20 @@
         password:'',
         lock:false,
         openSocket:false,
-        peopleInfo:{type:1}
+        peopleInfo:{type:1},
+        dataList:[]
+      }
+    },
+    components:{
+      DataList
+    },
+    computed:{
+      sortList:function(){
+        return this.dataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){

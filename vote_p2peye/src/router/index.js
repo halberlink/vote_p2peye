@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import countList from '@/components/countList'
 import Index from '@/components/index'
 import indexM from '@/components/index_m'
 import waitVote from '@/components/waitVote'
@@ -40,7 +41,15 @@ export default new Router({
       component: waitVote,
       meta:{
         title: '等待投票'
-      }
+      },
+      children: [
+        {
+          // 当 /user/:id/profile 匹配成功，
+          // UserProfile 会被渲染在 User 的 <router-view> 中
+          path: 'countList',
+          component: countList
+        }
+      ]
     },
     {
       path: '/waitVote_m',

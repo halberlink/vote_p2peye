@@ -44,12 +44,16 @@
         </div>
       </div>
     </div>
+    <div class="countList">
+      <DataList :dataList="sortList"></DataList>
+    </div>
   </div>
 
 </template>
 
 <script>
   import { Toast } from 'mint-ui';
+  import DataList from './countList.vue'
   export default {
     name: 'waitVote',
     data () {
@@ -59,7 +63,56 @@
         password:'',
         lock:false,
         openSocket:false,
-        jugeList:[]
+        jugeList:[],
+        dataList:[
+          {
+            name:"1",
+            job:"2",
+            count:2.3
+          },
+          {
+            name:"1",
+            job:"2",
+            count:1
+          },
+          {
+            name:"1",
+            job:"2",
+            count:4.5
+          },
+          {
+            name:"1",
+            job:"2",
+            count:3
+          },
+          {
+            name:"1",
+            job:"2",
+            count:5.6
+          },
+          {
+            name:"1",
+            job:"2",
+            count:3.4
+          },
+          {
+            name:"1",
+            job:"2",
+            count:3.2
+          },
+        ]
+      }
+    },
+    components:{
+      DataList
+    },
+    computed:{
+      sortList:function(){
+        return this.dataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){

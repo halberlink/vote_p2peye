@@ -105,8 +105,6 @@
       websocketonopen() {
         console.log("WebSocket连接成功");
         //进入房间通知
-
-
         this.openSocket = true
       },
       websocketonerror(e) { //错误
