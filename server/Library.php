@@ -45,7 +45,7 @@ class module
 
 		$isInsert = strstr($query, 'INSERT');
 
-		if(!$isInsert){
+		if(!$isInsert && $res){
 
 			while ($row = mysql_fetch_assoc($res)) {
 			    $arr[]=$row;
@@ -103,11 +103,7 @@ class module
 
 		$res = self::queryMysql("select * from peoples where status ='0'");
 
-		var_dump($res);
-
 		$res = current($res);
-
-
 
 		$res = self::queryMysql("UPDATE peoples SET status='1' where name = '".$res['name']."'");
 
@@ -153,23 +149,6 @@ class module
 	    if($res['status'] == 2){
 
 	    	$res['ing'] = self::queryMysql("select * from peoples where status ='1'");
-
-			//$res_now_name = $res_now[0]['name'];
-
-			//$res = self::queryMysql("UPDATE peoples SET status='2' where name = '".$res_now_name."'");
-
-
-			// $res_will = self::queryMysql("select * from peoples where status ='0'");
-
-			// $res_will = current($res_will);
-
-			// $res_will_name = $res_will['name'];
-
-			// $res = self::queryMysql("UPDATE peoples SET status='1' where name = '".$res_will_name."'");
-
-			// if($res){
-			// 	$res = self::queryMysql("select * from peoples where status ='1'");
-			// }
 
 	    }
 
