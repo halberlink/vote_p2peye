@@ -96,7 +96,7 @@
       },
       initWebSocket(){ //初始化weosocket
         console.log("insocket")
-        const wsuri = "ws://192.168.5.154:9527/?0";//ws地址
+        const wsuri = "ws://192.168.5.156:9527/?0";//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 

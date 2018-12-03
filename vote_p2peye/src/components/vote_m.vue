@@ -9,7 +9,7 @@
           <div class="face">
             <div class="face-icon-new face-icon"></div>
           </div>
-          <div class="name">前端-张某某</div>
+          <div class="name">{{peopleInfo.job}}-{{peopleInfo.name}}</div>
         </div>
         <div class="vote-num">
           <div class="key">评分：</div>
@@ -26,19 +26,19 @@
           <div slot="end">10</div>
         </mt-range>
       </div>
-      <mt-button @click="register" size="large" type="primary">提交评分</mt-button>
+      <mt-button @click="subValue" size="large" type="primary">提交评分</mt-button>
     </div>
 
     <div class="vote-history">
       <div class="ui-tit">历史得分</div>
-      <div class="vote-history-item">
+      <div class="vote-history-item" v-for="item in historyList">
         <div class="face">
-          <div class="face-icon-new face-icon"></div>
+          <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="num">
           <div class="name">
-            <span>前端-张某某</span>
-            <span class="percent">9</span>
+            <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
+            <span class="percent">{{item.count}}</span>
           </div>
           <div class="range">
             <mt-progress :value="60" :barHeight="10">
@@ -59,60 +59,127 @@
     name: 'vote_m',
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App',
-        username:"",
-        password:'',
         lock:false,
-        rangeValue:0
+        rangeValue:0,
+        openSocket:false,
+        userInfo:{},
+        peopleInfo:{},
+        historyList:[]
       }
     },
+    created:function(){
+
+
+      if(localStorage.getItem("userInfo")){
+        this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      }else{
+        this.userInfo.id=0;
+      }
+      this.initWebSocket();
+    },
     methods:{
-      register:function(){
+      subValue:function(){
         var _this = this;
-        if(this.username == ""){
-          Toast({
-            message: '请输入姓名',
-            position: 'middle',
-            duration: 2000
-          });
-          return;
-        }
 
         var Data = {
-          name : this.username.trim(),
+          interface : "vote",
+          data:{
+            from_id:this.userInfo.id,
+            to_id:this.peopleInfo.id,
+            count:this.rangeValue
+          }
         };
 
-        var postData = this.$qs.stringify(Data);
+        this.websocketsend(Data)
+      },
+      initWebSocket(){ //初始化weosocket
+        var userInfo = this.userInfo;
+        console.log(this.userInfo)
+        console.log("insocket")
+        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        this.websock = new WebSocket(wsuri);
+        this.websock.onopen = this.websocketonopen;
 
-        this.lock = true;
-        this.$http.post("http://192.168.9.215/server/register.php",postData,{
-          headers:{'Content-Type':'application/x-www-form-urlencoded'}
-        }).then(function(res){
-          if(res.data.code == 200){
-            Toast({
-              message: '录入成功！',
-              position: 'middle',
-              duration: 2000
-            });
-            _this.$router.push()
-          }else{
-            Toast({
-              message:  res.data.message,
-              position: 'middle',
-              duration: 2000
-            });
-          }
-          _this.lock = false;
-        }).catch(function(res){
-          _this.lock = false;
-          Toast({
-            message:  "服务异常，请稍后再试",
-            position: 'middle',
-            duration: 2000
-          });
+        this.websock.onerror = this.websocketonerror;
 
-        });
-      }
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onclose = this.websocketclose;
+      },
+
+      websocketonopen() {
+        console.log("WebSocket连接成功");
+        //进入房间通知
+
+
+        this.openSocket = true
+      },
+      websocketonerror(e) { //错误
+        console.log("WebSocket连接发生错误");
+        this.openSocket = false
+      },
+      websocketonmessage(event){ //数据接收
+        var _this = this;
+
+        event = JSON.parse(event.data)
+        console.log(event)
+
+        switch (event.interface){
+          case "info":
+            //获取进程状态
+            if(event.code == 200){
+
+              for(let i in event.data.online){
+                if(event.data.online[i].from_id == this.userInfo.id && event.data.online[i].vote_state == 1){
+                  this.$router.push("/voted");
+                }
+              }
+
+
+
+              this.$store.commit("changevote",{
+                status:event.data.status
+              })
+              this.peopleInfo = event.data.ing[0];
+              for(var name in event.data.history){
+                 if( event.data.history[name].from_id == this.userInfo.id){
+                  this.historyList.push(event.data.history[name]);
+                }
+              }
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "vote":
+            //获取进程状态
+            if(event.code == 200){
+              if(event.data[0].from_id == this.userInfo.id){
+                this.$router.push("/voted");
+              }
+
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+        }
+      },
+
+      websocketsend(agentData){//数据发送
+        this.websock.send(JSON.stringify(agentData));
+
+      },
+
+      websocketclose(e){ //关闭
+        console.log("connection closed (" + e.code + ")");
+        this.openSocket = false
+      },
     }
   }
 </script>

@@ -13,11 +13,11 @@
         <div class="info">
           <div class="info-item">
             <div class="info-item-key">姓名：</div>
-            <div class="info-item-value">张某某</div>
+            <div class="info-item-value">{{peopleInfo.name}}</div>
           </div>
           <div class="info-item">
             <div class="info-item-key">组：</div>
-            <div class="info-item-value">web</div>
+            <div class="info-item-value">{{peopleInfo.job}}</div>
           </div>
           <div class="info-item">
             <div class="info-item-key">入职时间：</div>
@@ -29,7 +29,8 @@
           </div>
           <div class="info-item">
             <div class="info-item-key">类别 ：</div>
-            <div class="info-item-value">新员工</div>
+            <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
+            <div class="info-item-value" v-else>老员工</div>
           </div>
         </div>
       </div>
@@ -38,37 +39,12 @@
     <div class="ui-judges">
       <div class="ui-listtitle">评委席</div>
       <div class="ui-list">
-        <div class="ui-list-item">
+        <div class="ui-list-item" v-for="item in jugeList">
           <div class="ui-chair">
-            <div class="ui-name">王五六</div>
+            <div class="ui-name">{{item.uname}}</div>
           </div>
-          <div class="ui-voted"></div>
+          <div class="ui-voted" v-if="item.vote_status == 1"></div>
         </div>
-        <div class="ui-list-item">
-          <div class="ui-chair"></div>
-          <div class="ui-voted"></div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-chair"></div>
-          <div class="ui-voted"></div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-chair"></div>
-          <div class="ui-voted"></div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-chair"></div>
-          <div class="ui-voted"></div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-chair"></div>
-          <div class="ui-voted"></div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-chair"></div>
-          <div class="ui-voted"></div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -82,28 +58,102 @@
     components:{
       banner
     },
-    name: 'HelloWorld',
+    name: 'vote',
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App',
         username:"",
         password:'',
-        lock:false
+        lock:false,
+        openSocket:false,
+        jugeList:[],
+        peopleInfo:{}
       }
     },
     created:function(){
-      console.log(this.$store.state.voteState)
-      this.$store.commit("changevote",{
-        state:1
-      })
-      console.log(this.$store.state.voteState)
+      this.initWebSocket();
     },
     methods:{
       jumpTo:function(url){
         this.$router.push(url)
       },
       register:function() {
-      }
+      },
+      initWebSocket(){ //初始化weosocket
+        var userInfo = {};
+        if(localStorage.getItem("userInfo")){
+          userInfo = localStorage.getItem("userInfo");
+          userInfo = JSON.parse(userInfo)
+        }else{
+          userInfo.id = 0;
+        }
+        console.log("insocket")
+        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        this.websock = new WebSocket(wsuri);
+        this.websock.onopen = this.websocketonopen;
+
+        this.websock.onerror = this.websocketonerror;
+
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onclose = this.websocketclose;
+      },
+
+      websocketonopen() {
+        console.log("WebSocket连接成功");
+        //进入房间通知
+
+
+        this.openSocket = true
+      },
+      websocketonerror(e) { //错误
+        console.log("WebSocket连接发生错误");
+        this.openSocket = false
+      },
+      websocketonmessage(event){ //数据接收
+        var _this = this;
+
+        event = JSON.parse(event.data)
+        console.log(event)
+
+        switch (event.interface){
+          case "info":
+            //获取进程状态
+            if(event.code == 200){
+
+              this.jugeList = event.data.online;
+              this.peopleInfo = event.data.ing[0];
+
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "vote":
+            //获取进程状态
+            if(event.code == 200){
+
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+
+        }
+      },
+
+      websocketsend(agentData){//数据发送
+        this.websock.send(JSON.stringify(agentData));
+
+      },
+      websocketclose(e){ //关闭
+        console.log("connection closed (" + e.code + ")");
+        this.openSocket = false
+      },
     }
   }
 </script>

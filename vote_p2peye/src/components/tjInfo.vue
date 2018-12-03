@@ -5,44 +5,32 @@
     <div @click="jumpTo('/InformationEntry')">213</div>
     <div class="ui-Candidate">
       <div class="ui-tit">候选人</div>
-      <div class="ui-list">
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
+      <div class="ui-people">
+        <div class="face">
+          <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-      </div>
-    </div>
-    <div class="ui-judges">
-      <div class="ui-tit">评委席</div>
-      <div class="ui-list">
-        <div class="ui-list-item" v-for="item in jugeList">
-          <div class="ui-chair">
-            <div class="ui-name">{{item.uname}}</div>
+        <div class="info">
+          <div class="info-item">
+            <div class="info-item-key">姓名：</div>
+            <div class="info-item-value">{{peopleInfo.name}}</div>
           </div>
-          <!--<div class="ui-voted"></div>-->
-        </div>
+          <div class="info-item">
+            <div class="info-item-key">组：</div>
+            <div class="info-item-value">{{peopleInfo.job}}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-key">类别 ：</div>
+            <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
+            <div class="info-item-value" v-else>老员工</div>
+          </div>
+          <div class="info-item">
+            <div class="info-item-key">推荐语：</div>
+            <div class="info-item-value">{{peopleInfo.reason}}</div>
+          </div>
 
+        </div>
       </div>
+      <div class="enter-key" @click="nextStep"></div>
     </div>
   </div>
 
@@ -51,24 +39,32 @@
 <script>
   import { Toast } from 'mint-ui';
   export default {
-    name: 'waitVote_m',
+    name: 'tjInfo',
     data () {
       return {
         username:"",
         password:'',
         lock:false,
-        jugeList:[],
-        openSocket:false
+        openSocket:false,
+        peopleInfo:{type:1}
       }
     },
     created:function(){
       this.initWebSocket();
     },
     methods:{
-      jumpTo:function(url){
-        this.$router.push(url)
-      },
-      register:function() {
+      nextStep:function() {
+        if(this.openSocket){
+          this.websocketsend({
+            "interface":"startVote",
+            "data":""
+          })
+        }else{
+          this.$message({
+            message: "socket未连接",
+            type: 'error'
+          });
+        }
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = {};
@@ -114,7 +110,7 @@
               this.$store.commit("changevote",{
                 status:event.data.status
               })
-              this.jugeList = event.data.online;
+              this.peopleInfo = event.data.ing[0];
 
             }else{
               _this.$message({
@@ -124,14 +120,14 @@
             }
 
             break;
-          case "start":
+          case "startVote":
             //获取进程状态
             if(event.code == 200){
               localStorage.setItem("status",event.data.status);
               this.$store.commit("changevote",{
                 status:event.data.status
               })
-              this.$router.push("/tjInfo_m");
+              this.$router.push("/vote");
             }else{
               _this.$message({
                 message: event.message,
@@ -147,7 +143,6 @@
         this.websock.send(JSON.stringify(agentData));
 
       },
-
       websocketclose(e){ //关闭
         console.log("connection closed (" + e.code + ")");
         this.openSocket = false
@@ -165,5 +160,5 @@
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
-  @import "../styles/waitVote_m.scss";
+  @import "../styles/vote.scss";
 </style>
