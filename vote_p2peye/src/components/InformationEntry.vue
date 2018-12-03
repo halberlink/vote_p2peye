@@ -4,16 +4,28 @@
     <div class="insert">
       <div class="top">
         <el-row :gutter="20">
-          <el-col :span="12">
+          <el-col :span="8">
             <div class="grid-content bg-purple">
               <el-input v-model="nameValue" placeholder="请输入员工姓名"></el-input>
             </div>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <div class="grid-content bg-purple">
               <el-select v-model="jobValue" placeholder="请选择员工职位">
                 <el-option
                   v-for="item in jobs"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+            </div>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content bg-purple">
+              <el-select v-model="typeValue" placeholder="请选择新老员工">
+                <el-option
+                  v-for="item in type"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value">
@@ -73,6 +85,7 @@
         nameValue:"",
         jobValue: '',
         reasonValue:'',
+        typeValue:"",
         jobs:[
           {
             value:1,
@@ -103,20 +116,26 @@
             label:"运维"
           }
         ],
+        type:[
+          {
+            value:1,
+            label:"新员工"
+          },
+          {
+            value:2,
+            label:"老员工"
+          }
+        ],
         PeopleData: [],
-        lock:false
+        lock:false,
+        openSocket:false,
+        InsertData:{}
       }
     },
     created:function(){
       var _this = this;
-      this.$http.post("http://192.168.9.215/server/getAllpeoples.php",{},{
-        headers:{'Content-Type':'application/x-www-form-urlencoded'}
-      }).then(function(res){
-        _this.PeopleData = res.data.data
 
-      }).catch(function(res){
-
-      });
+      this.initWebSocket();
     },
     methods:{
       addPeople:function(){
@@ -155,40 +174,102 @@
           });
           return;
         }
-        var Data = {
+        this.InsertData = {
           name : this.nameValue.trim(),
           job : this.jobValue,
+          type:this.typeValue,
+          uid:30,
           reason : this.reasonValue.trim()
         };
 
-        var postData = this.$qs.stringify(Data);
-
-        this.lock = true;
-        this.$http.post("http://192.168.9.215/server/insert.php",postData,{
-          headers:{'Content-Type':'application/x-www-form-urlencoded'}
-        }).then(function(res){
-          if(res.data.code == 200){
-            _this.PeopleData.push(Data);
-            _this.$message({
-              message: '添加成功',
-              type: 'success'
-            });
-          }else{
-            _this.$message({
-              message: res.data.message,
-              type: 'error'
-            });
-          }
-          _this.lock = false;
-        }).catch(function(res){
-          _this.lock = false;
+        var addPeople = {
+          "interface":"insert",
+          "data":this.InsertData
+        }
+        console.log(this.InsertData)
+        if(this.openSocket){
+          this.websocketsend(addPeople);
+        }else{
           _this.$message({
-            message: "服务异常，请稍后再试",
-            type: 'warning'
+            message: "socket未连接",
+            type: 'error'
           });
+        }
 
-        });
-      }
+
+      },
+      initWebSocket(){ //初始化weosocket
+        console.log("insocket")
+        const wsuri = "ws://192.168.5.154:9527";//ws地址
+        this.websock = new WebSocket(wsuri);
+        this.websock.onopen = this.websocketonopen;
+
+        this.websock.onerror = this.websocketonerror;
+
+        this.websock.onmessage = this.websocketonmessage;
+        this.websock.onclose = this.websocketclose;
+      },
+
+      websocketonopen() {
+        console.log("WebSocket连接成功");
+
+        this.openSocket = true
+        //获取列表
+
+        var getPeoplesdata = {
+          "interface" : 'getPeoples',
+          data : ''
+        }
+        this.websocketsend(getPeoplesdata);
+
+
+      },
+      websocketonerror(e) { //错误
+        console.log("WebSocket连接发生错误");
+        this.openSocket = false
+      },
+      websocketonmessage(event){ //数据接收
+        var _this = this;
+        //注意：长连接我们是后台直接1秒推送一条数据，
+        //但是点击某个列表时，会发送给后台一个标识，后台根据此标识返回相对应的数据，
+        //这个时候数据就只能从一个出口出，所以让后台加了一个键，例如键为1时，是每隔1秒推送的数据，为2时是发送标识后再推送的数据，以作区分
+        event = JSON.parse(event.data)
+        console.log(event)
+
+        switch (event.interface){
+          case "getPeoples":
+            if(event.code == 200){
+              this.PeopleData = event.data;
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "insert":
+            if(event.code == 200){
+              this.PeopleData.push(this.InsertData);
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+            break;
+        }
+
+
+      },
+
+      websocketsend(agentData){//数据发送
+        this.websock.send(JSON.stringify(agentData));
+      },
+
+      websocketclose(e){ //关闭
+        console.log("connection closed (" + e.code + ")");
+      },
     }
   }
 </script>

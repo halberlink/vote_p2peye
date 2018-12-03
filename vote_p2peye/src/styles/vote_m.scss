@@ -1,0 +1,122 @@
+.ui-vote {
+  font-size: px2rem(30px);
+  .vote-info {
+    width:px2rem(650px);
+    margin:0 auto;
+    background: #ffffff;
+    padding:0 px2rem(20px);
+    padding-bottom: px2rem(20px);
+    -webkit-border-radius: px2rem(8px);
+    -moz-border-radius: px2rem(8px);
+    border-radius: px2rem(16px);
+    margin-bottom:px2rem(20px);
+  }
+  .vote-people {
+    margin-bottom:px2rem(40px);
+  }
+  .vote-people-info {
+    height:px2rem(136px);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .vote-num {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom:px2rem(40px);
+    .value {
+      width:px2rem(110px);
+      font-size: px2rem(40px);
+      padding-bottom: px2rem(5px);
+      border-bottom: 1px solid #666666;
+      color: #ff9933;
+    }
+  }
+  .face {
+    width: px2rem(120px);
+    height: px2rem(120px);
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    background: #947ee8;
+    margin-right:px2rem(20px);
+    position: relative;
+  }
+  .face-icon {
+    position: absolute;
+    right: px2rem(-40px);
+    top:px2rem(-20px);
+  }
+  .face-icon-new{
+    width:px2rem(60px);
+    height:px2rem(50px);
+    background: url("../assets/new-icon.png") no-repeat center;
+    -webkit-background-size: contain;
+    background-size: contain;
+  }
+  .face-icon-old{
+    width:px2rem(60px);
+    height:px2rem(50px);
+    background: url("../assets/old-icon.png") no-repeat center;
+    -webkit-background-size: contain;
+    background-size: contain;
+  }
+  .vote-history {
+    width:px2rem(650px);
+    margin:0 auto;
+    background: #ffffff;
+    padding:0 px2rem(20px);
+    padding-bottom: px2rem(20px);
+    -webkit-border-radius: px2rem(8px);
+    -moz-border-radius: px2rem(8px);
+    border-radius: px2rem(16px);
+    margin-bottom:px2rem(20px);
+    .face {
+      width: px2rem(90px);
+      height: px2rem(90px);
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      background: #947ee8;
+      margin-right:px2rem(20px);
+      position: relative;
+    }
+    .face-icon {
+      position: absolute;
+      right: px2rem(-25px);
+      top:px2rem(-10px);
+    }
+    .face-icon-new{
+      width:px2rem(38px);
+      height:px2rem(28px);
+      background: url("../assets/new-icon.png") no-repeat center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
+    .face-icon-old{
+      width:px2rem(38px);
+      height:px2rem(28px);
+      background: url("../assets/old-icon.png") no-repeat center;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
+    .vote-history-item {
+      display: flex;
+
+      justify-content: flex-start;
+      align-items: center;
+      .num {
+        width:px2rem(550px);
+        text-align: left;
+      }
+      .name {
+        display: flex;
+        justify-content: space-between;
+      }
+      .percent {
+        align-self: center;
+      }
+    }
+  }
+
+}

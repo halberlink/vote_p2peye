@@ -1,0 +1,85 @@
+.ui-waitvote {
+
+  .ui-Candidate {
+    width:px2rem(690px);
+    margin:0 auto;
+    background: #ffffff;
+    padding-bottom: px2rem(20px);
+    -webkit-border-radius: px2rem(8px);
+    -moz-border-radius: px2rem(8px);
+    border-radius: px2rem(16px);
+    margin-bottom:px2rem(20px);
+    .ui-list {
+      padding:0 px2rem(20px);
+      width:px2rem(650px);
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .ui-list-item {
+      width:px2rem(216px);
+      height:px2rem(100px);
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .ui-face {
+      align-items: center;
+      width:px2rem(80px);
+      height:px2rem(80px);
+      background: #947ee8;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      margin-right:px2rem(15px);
+    }
+  }
+
+  .ui-judges {
+    width:px2rem(690px);
+    margin:0 auto;
+    background: #ffffff;
+    padding-bottom: px2rem(20px);
+    -webkit-border-radius: px2rem(8px);
+    -moz-border-radius: px2rem(8px);
+    border-radius: px2rem(16px);
+    margin-bottom:px2rem(20px);
+    .ui-list {
+      padding:0 px2rem(20px);
+      width:px2rem(650px);
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .ui-list-item {
+      width:px2rem(162px);
+      height:px2rem(100px);
+      position: relative;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .ui-chair {
+      width:px2rem(137px);
+      height:px2rem(90px);
+      background: url("../assets/chair.png") no-repeat center;
+      background-size: 100% 100%;
+    }
+    .ui-voted {
+      position: absolute;
+      top:50%;
+      left:50%;
+      width:px2rem(100px);
+      height:px2rem(100px);
+      margin-left:px2rem(-50px);
+      margin-top:px2rem(-50px);
+      background: url("../assets/voted.png") no-repeat center;
+      background-size: cover;
+    }
+    .ui-name {
+      line-height: px2rem(62px);
+      color: #fff;
+      font-size: px2rem(25px);
+    }
+  }
+}

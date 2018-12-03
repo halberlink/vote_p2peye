@@ -7,7 +7,7 @@ $type = $_GET['type'];
 if($type == 'begin'){
 
 	$redis = new Redis();
-	$redis->connect('127.0.0.1', 16379);
+	$redis->connect('127.0.0.1', 6379);
 
 	$redis->set("poll_status",2);
 	$status = $redis->get("poll_status");
@@ -57,14 +57,13 @@ if($type == 'next'){
 if($type == 'webs'){
 
 	$redis = new Redis();
-	$redis->connect('127.0.0.1', 16379);
+	$redis->connect('127.0.0.1', 6379);
 
 	$status = $redis->get("poll_status");
 
 
 	$res = conntentMysql("select * from peoples where status ='1'");
 
-	
 
 	if(empty($res) || $status == 1){
 		echo json_encode(array("code"=>"4030","data"=>$res,"message"=>"活动未开始"));exit;

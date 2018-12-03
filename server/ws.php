@@ -11,7 +11,8 @@
 
 //创建websocket服务器对象，监听0.0.0.0:9527端口
 $ws = new swoole_websocket_server("0.0.0.0", 4000);
-$ws->addListener("192.168.5.154", 4100,SWOOLE_SOCK_TCP);
+//$ws->addListener("192.168.5.154", 4100,SWOOLE_SOCK_TCP);
+$ws->addListener("192.168.9.215", 4100,SWOOLE_SOCK_TCP);
 //
 ////监听WebSocket连接打开事件
 //$ws->on('open', function ($ws, $request) {
