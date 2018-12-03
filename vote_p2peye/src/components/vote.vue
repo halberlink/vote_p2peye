@@ -1,10 +1,11 @@
 <template>
   <div class="ui-waitvote">
-    <mt-header title="评选人等待投票">
-    </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div>
-    <div class="ui-Candidate">
-      <div class="ui-tit">候选人</div>
+    <!-- <mt-header title="评选人等待投票">
+    </mt-header> -->
+    <banner></banner>
+    <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
+    <div class="ui-Candidate ui-contentbg">
+      <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
         <div class="face">
           <div class="face-icon-new face-icon"></div>
@@ -36,7 +37,7 @@
       <div class="enter-key"></div>
     </div>
     <div class="ui-judges">
-      <div class="ui-tit">评委席</div>
+      <div class="ui-listtitle">评委席</div>
       <div class="ui-list">
         <div class="ui-list-item" v-for="item in jugeList">
           <div class="ui-chair">
@@ -55,8 +56,12 @@
 
 <script>
   import { Toast } from 'mint-ui';
-  import DataList from './countList.vue'
+  import DataList from './common/countList.vue'
+  import banner from './common/banner';
   export default {
+    components:{
+      banner
+    },
     name: 'vote',
     data () {
       return {
@@ -173,7 +178,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    background: #fafafa;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

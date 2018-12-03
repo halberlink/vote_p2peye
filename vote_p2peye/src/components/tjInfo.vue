@@ -41,7 +41,7 @@
 
 <script>
   import { Toast } from 'mint-ui';
-  import DataList from './countList.vue'
+  import DataList from './common/countList.vue'
   export default {
     name: 'tjInfo',
     data () {
