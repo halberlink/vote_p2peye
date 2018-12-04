@@ -48,7 +48,13 @@
       </div>
     </div>
     <div class="countList">
-      <DataList :dataList="sortList"></DataList>
+      <DataList :dataList="newsortList" name="新员工"></DataList>
+    </div>
+    <div class="countList">
+      <DataList :dataList="oldsortList" name="老员工"></DataList>
+    </div>
+    <div class="countList">
+      <DataList :dataList="allortList" name="全部排行"></DataList>
     </div>
   </div>
 
@@ -59,9 +65,6 @@
   import DataList from './common/countList.vue'
   import banner from './common/banner';
   export default {
-    components:{
-      banner
-    },
     name: 'vote',
     data () {
       return {
@@ -71,14 +74,16 @@
         openSocket:false,
         jugeList:[],
         peopleInfo:{},
-        dataList:[],
+        olddataList:[],
+        newdataList:[],
+        alldataList:[],
         websock:null,
         votedList:[],
         allvoted:true
       }
     },
     components:{
-      DataList
+      DataList,banner
     },
     computed:{
       filterList:function(){
@@ -92,6 +97,27 @@
 
         }
         return newList;
+      },
+      oldsortList:function(){
+        return this.olddataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
+      },
+      newsortList:function(){
+        return this.newdataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
+      },
+      allortList:function(){
+        return this.alldataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){
@@ -167,17 +193,24 @@
               this.peopleInfo = event.data.ing[0];
 
               this.votedList = [];
+              this.newdataList = [];
+              this.olddataList = [];
+              this.alldataList = [];
+              //榜单
+              let RankCount = event.data.rank;
 
-//              for(let i in this.jugeList){
-//                if(this.filterList[i].vote_status == 1){
-//                  this.votedList.push(1);
-//                }
-//
-//              }
-//              alert(7)
-//              if(this.votedList.length >= this.filterList.length){
-//                this.allvoted = true;
-//              }
+              for(let id in RankCount){
+                let countItem = {};
+                countItem.count = RankCount[id][0].count;
+                countItem.job = RankCount[id][0].info.job;
+                countItem.name = RankCount[id][0].info.name;
+                this.alldataList.push(countItem);
+                if(RankCount[id][0].info.type == 1){
+                  this.newdataList.push(countItem);
+                }else{
+                  this.olddataList.push(countItem);
+                }
+              }
 
             }else{
               _this.$message({
@@ -189,23 +222,30 @@
             break;
           case "vote":
             //获取进程状态
-            if(event.code == 200){
-              this.votedList.push(1);
-
-            }else{
-              _this.$message({
-                message: event.message,
-                type: 'error'
-              });
-            }
+//            if(event.code == 200){
+//              this.votedList.push(1);
+//
+//            }else if(event.code == 4300){
+//              _this.$message({
+//                message: "没有更多了",
+//                type: 'error'
+//              });
+//              this.$router.push("/allRank")
+//
+//            }else{
+//              _this.$message({
+//                message: event.message,
+//                type: 'error'
+//              });
+//            }
 
             break;
           case "next":
             //获取进程状态
             if(event.code == 200){
               this.$router.replace("/tjInfo")
-            }else if(event.code == 4001){
-              this.$router.replace("/rankList")
+            }else if(event.code == 4300){
+              this.$router.replace("/allRank")
             }else{
               _this.$message({
                 message: event.message,

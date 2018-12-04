@@ -161,12 +161,13 @@
             if(event.code == 200){
               this.websock.close()
               this.$router.replace("/tjInfo_m")
-            }else if(event.code == 4001){
+            }else if(event.code == 4300){
               _this.$message({
                 message: "没有更多了",
                 type: 'error'
               });
 
+              
 
             }else{
               _this.$message({

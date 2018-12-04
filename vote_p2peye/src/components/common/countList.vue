@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>评分实时排名</h1>
+    <h1>{{name}}</h1>
     <div class="inseredPeople">
       <el-table
         :data="dataList"
@@ -37,7 +37,7 @@
       return {
       }
     },
-    props:["dataList"],
+    props:["dataList","name"],
     created:function(){
       var _this = this;
 

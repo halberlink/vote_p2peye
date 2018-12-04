@@ -10,6 +10,7 @@ import tjInfo from '@/components/tjInfo'
 import vote_m from '@/components/vote_m'
 import voteEnd_m from '@/components/voteEnd_m'
 import vote from '@/components/vote'
+import allRank from '@/components/allRank'
 import InformationEntry from '@/components/InformationEntry'
 
 Vue.use(Router)
@@ -96,6 +97,14 @@ export default new Router({
       path: '/voteEnd_m',
       name: 'voteEnd_m',
       component: voteEnd_m,
+      meta:{
+        title: '评选人结束投票'
+      }
+    },
+    {
+      path: '/allRank',
+      name: 'allRank',
+      component: allRank,
       meta:{
         title: '评选人结束投票'
       }

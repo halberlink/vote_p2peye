@@ -7,7 +7,7 @@
       <div class="vote-people">
         <div class="vote-people-info">
           <div class="face">
-            <div class="face-icon-new face-icon"></div>
+            <div :class="peopleInfo.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
           <div class="name">{{peopleInfo.job}}-{{peopleInfo.name}}</div>
         </div>
@@ -136,11 +136,11 @@
             //获取进程状态
             if(event.code == 200){
 
-              for(let i in event.data.online){
-                if(event.data.online[i].id == this.userInfo.id && event.data.online[i].vote_state == 1){
-                  this.$router.replace("/voteEnd_m");
-                }
-              }
+//              for(let i in event.data.online){
+//                if(event.data.online[i].id == this.userInfo.id && event.data.online[i].vote_state == 1){
+//                  this.$router.replace("/voteEnd_m");
+//                }
+//              }
 
 
               this.peopleInfo = event.data.ing[0];
@@ -163,8 +163,13 @@
           case "vote":
             //获取进程状态
             if(event.code == 200){
-              this.websock.close()
-              this.$router.replace("/voteEnd_m");
+
+              console.log(event.data.from_id,this.userInfo.id)
+              if(event.data.from_id == this.userInfo.id){
+                this.websock.close()
+                this.$router.replace("/voteEnd_m");
+              }
+
 
             }else{
               _this.$message({
@@ -177,7 +182,6 @@
           case "next":
             //获取进程状态
             if(event.code == 200){
-              this.websock.close()
               this.$router.replace("/tjInfo_m");
 
             }else{

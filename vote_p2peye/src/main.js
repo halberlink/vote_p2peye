@@ -30,6 +30,7 @@ var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //Android�
 var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
 var isMobile = (isiOS || isAndroid);
 const ingStatus =  localStorage.getItem("ingStatus")
+const isLogin =  localStorage.getItem("userInfo")
 
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
@@ -39,13 +40,13 @@ router.beforeEach((to, from, next) => {
 
   //是移动端 进入投票页面
   //PC端进入 开始投票页面
-  if(!store.state.isLogin && to.path !== '/'){
-
-    next({
-      path:'/',
-      replace:true
-    })
-  }
+  // if(!store.state.isLogin  && to.path !== '/' && to.path !== '/allRank'){
+  //
+  //   next({
+  //     path:'/',
+  //     replace:true
+  //   })
+  // }
   if(isMobile){
 
     if(to.path === '/waitVote_m' && ingStatus == '2'){

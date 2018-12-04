@@ -103,12 +103,12 @@
           case "register":
             if(event.code == 200){
               var userInfo  = event.data;
-              console.log(userInfo)
-              localStorage.setItem("userInfo",JSON.stringify(userInfo));
+
               this.$store.commit("changelogin",{
                 isLogin:true
               })
               if(userInfo.id != 30 && userInfo.uname == this.username.trim()){
+                localStorage.setItem("userInfo",JSON.stringify(userInfo));
                 this.$router.replace("/waitVote_m")
               }
             }else{
