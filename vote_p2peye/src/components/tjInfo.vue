@@ -33,9 +33,8 @@
       </div>
       <div class="enter-key" @click="nextStep"></div>
     </div>
-    <div class="ui-judges">
-      <div class="ui-listtitle">推荐语</div>
-      <div class="ui-list">成都发布国家看到附近的附件花费的海景房的机会</div>
+    <div class="countList">
+      <DataList :dataList="sortList"></DataList>
     </div>
   </div>
 
@@ -44,6 +43,7 @@
 <script>
   import { Toast } from 'mint-ui';
   import banner from './common/banner';
+  import DataList from './common/countList.vue';
   export default {
     components:{
       banner
@@ -55,7 +55,20 @@
         password:'',
         lock:false,
         openSocket:false,
-        peopleInfo:{type:1}
+        peopleInfo:{type:1},
+        dataList:[]
+      }
+    },
+    components:{
+      DataList
+    },
+    computed:{
+      sortList:function(){
+        return this.dataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){

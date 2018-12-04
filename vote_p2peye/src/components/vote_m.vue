@@ -28,7 +28,6 @@
       </div>
       <mt-button @click="subValue" size="large" type="primary">提交评分</mt-button>
     </div>
-
     <div class="vote-history">
       <div class="ui-tit">历史得分</div>
       <div class="vote-history-item" v-for="item in historyList">
@@ -41,7 +40,7 @@
             <span class="percent">{{item.count}}</span>
           </div>
           <div class="range">
-            <mt-progress :value="60" :barHeight="10">
+            <mt-progress v-model="item.count | toNumber" :value="60" :barHeight="10">
               <div slot="start"></div>
               <div slot="end"></div>
             </mt-progress>
@@ -67,8 +66,12 @@
         historyList:[]
       }
     },
+    filters:{
+      toNumber:function(value){
+        return value?Number(value):0;
+      }
+    },
     created:function(){
-
 
       if(localStorage.getItem("userInfo")){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -129,12 +132,10 @@
             if(event.code == 200){
 
               for(let i in event.data.online){
-                if(event.data.online[i].from_id == this.userInfo.id && event.data.online[i].vote_state == 1){
+                if(event.data.online[i].id == this.userInfo.id && event.data.online[i].vote_state == 1){
                   this.$router.push("/voted");
                 }
               }
-
-
 
               this.$store.commit("changevote",{
                 status:event.data.status
