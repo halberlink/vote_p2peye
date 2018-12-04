@@ -7,40 +7,32 @@
       <div class="vote-people">
         <div class="vote-people-info">
           <div class="face">
-            <div class="face-icon-new face-icon"></div>
+            <div :class="peopleInfo.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
           <div class="name">{{peopleInfo.job}}-{{peopleInfo.name}}</div>
         </div>
         <div class="vote-num">
-          <div class="key">评分：</div>
+          <div class="key">当前评分：</div>
           <div class="value">
-            <span>{{rangeValue}}</span>
+            <span>{{peopleInfo.count}}</span>
 
           </div>
         </div>
-        <mt-range v-model="rangeValue"
-                  :min="0"
-                  :max="10"
-                  :step="1">
-          <div slot="start">0</div>
-          <div slot="end">10</div>
-        </mt-range>
       </div>
     </div>
-
     <div class="vote-history">
       <div class="ui-tit">历史得分</div>
-      <div class="vote-history-item">
+      <div class="vote-history-item" v-for="item in historyList">
         <div class="face">
-          <div class="face-icon-new face-icon"></div>
+          <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="num">
           <div class="name">
-            <span>前端-张某某</span>
-            <span class="percent">9</span>
+            <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
+            <span class="percent">{{item.count}}</span>
           </div>
           <div class="range">
-            <mt-progress :value="60" :barHeight="10">
+            <mt-progress :value="item.count | toNumber" :barHeight="10">
               <div slot="start"></div>
               <div slot="end"></div>
             </mt-progress>
@@ -62,18 +54,32 @@
         rangeValue:0,
         openSocket:false,
         userInfo:{},
-        peopleInfo:{}
+        peopleInfo:{},
+        historyList:[],
+        websock:null
+      }
+    },
+    filters:{
+      toNumber:function(value){
+        return value?Number(value)*10:0;
       }
     },
     created:function(){
-      this.initWebSocket();
+
       if(localStorage.getItem("userInfo")){
         this.userInfo = JSON.parse(localStorage.getItem("userInfo"));
       }else{
         this.userInfo.id=0;
       }
+      this.initWebSocket();
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
+      resetVote:function(){
+        this.$router.replace('/tjInfo_m')
+      },
       subValue:function(){
         var _this = this;
 
@@ -90,7 +96,7 @@
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = this.userInfo;
-
+        console.log(this.userInfo)
         console.log("insocket")
         const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
@@ -105,6 +111,8 @@
       websocketonopen() {
         console.log("WebSocket连接成功");
         //进入房间通知
+
+
         this.openSocket = true
       },
       websocketonerror(e) { //错误
@@ -122,11 +130,24 @@
             //获取进程状态
             if(event.code == 200){
 
-              this.$store.commit("changevote",{
-                status:event.data.status
-              })
+              //被投票人
               this.peopleInfo = event.data.ing[0];
 
+              localStorage.setItem("ingStatus",this.peopleInfo.status)
+              //历史投票
+              console.log("endvote")
+              this.historyList = [];
+              for(var name in event.data.history){
+                //只拿当前评选人的历史
+                if( event.data.history[name].from_id == this.userInfo.id){
+                  this.historyList.push(event.data.history[name]);
+                  //在当前评选人的历史中 拿到当前候选人的得分
+                  if( event.data.history[name].to_id == this.peopleInfo.id){
+                    this.peopleInfo.count = event.data.history[name].count
+                  }
+                }
+
+              }
             }else{
               _this.$message({
                 message: event.message,
@@ -135,14 +156,18 @@
             }
 
             break;
-          case "start":
+          case "next":
             //获取进程状态
             if(event.code == 200){
-              localStorage.setItem("status",event.data.status);
-              this.$store.commit("changevote",{
-                status:event.data.status
-              })
-              this.$router.push("/voted");
+              this.websock.close()
+              this.$router.replace("/tjInfo_m")
+            }else if(event.code == 4001){
+              _this.$message({
+                message: "没有更多了",
+                type: 'error'
+              });
+
+
             }else{
               _this.$message({
                 message: event.message,
@@ -160,7 +185,7 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
     }

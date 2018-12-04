@@ -40,7 +40,7 @@
             <span class="percent">{{item.count}}</span>
           </div>
           <div class="range">
-            <mt-progress v-model="item.count | toNumber" :value="60" :barHeight="10">
+            <mt-progress :value="item.count | toNumber" :barHeight="10">
               <div slot="start"></div>
               <div slot="end"></div>
             </mt-progress>
@@ -63,12 +63,13 @@
         openSocket:false,
         userInfo:{},
         peopleInfo:{},
-        historyList:[]
+        historyList:[],
+        websock:null
       }
     },
     filters:{
       toNumber:function(value){
-        return value?Number(value):0;
+        return value?Number(value)*10:0;
       }
     },
     created:function(){
@@ -79,6 +80,10 @@
         this.userInfo.id=0;
       }
       this.initWebSocket();
+    },
+    beforeDestroy:function(){
+      console.log("投票中")
+      this.websock.close()
     },
     methods:{
       subValue:function(){
@@ -92,7 +97,7 @@
             count:this.rangeValue
           }
         };
-
+        console.log("vote")
         this.websocketsend(Data)
       },
       initWebSocket(){ //初始化weosocket
@@ -133,14 +138,15 @@
 
               for(let i in event.data.online){
                 if(event.data.online[i].id == this.userInfo.id && event.data.online[i].vote_state == 1){
-                  this.$router.push("/voted");
+                  this.$router.replace("/voteEnd_m");
                 }
               }
 
-              this.$store.commit("changevote",{
-                status:event.data.status
-              })
+
               this.peopleInfo = event.data.ing[0];
+
+              localStorage.setItem("ingStatus",this.peopleInfo.status)
+              this.historyList = [];
               for(var name in event.data.history){
                  if( event.data.history[name].from_id == this.userInfo.id){
                   this.historyList.push(event.data.history[name]);
@@ -157,9 +163,22 @@
           case "vote":
             //获取进程状态
             if(event.code == 200){
-              if(event.data[0].from_id == this.userInfo.id){
-                this.$router.push("/voted");
-              }
+              this.websock.close()
+              this.$router.replace("/voteEnd_m");
+
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "next":
+            //获取进程状态
+            if(event.code == 200){
+              this.websock.close()
+              this.$router.replace("/tjInfo_m");
 
             }else{
               _this.$message({
@@ -178,7 +197,7 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
     }

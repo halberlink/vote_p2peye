@@ -43,11 +43,15 @@
       return {
         peopleInfo:{},
         lock:false,
-        openSocket:false
+        openSocket:false,
+        websock:null
       }
     },
     created:function(){
       this.initWebSocket();
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
       jumpTo:function(url){
@@ -100,12 +104,22 @@
                 status:event.data.status
               })
               this.peopleInfo = event.data.ing[0];
+              //reset 投票 如果为最后一个的时候 结束
+              if(this.peopleInfo){
+                localStorage.setItem("ingStatus",this.peopleInfo.status)
+                if(event.data.ing[0].status == 2){
+                  this.$router.replace('/vote_m')
+                }
+              }else{
+                _this.$message({
+                  message: "全部都已投完！谢谢参与",
+                  type: 'error'
+                });
+              }
+
 
             }else{
-              _this.$message({
-                message: event.message,
-                type: 'error'
-              });
+
             }
 
             break;
@@ -116,7 +130,7 @@
               this.$store.commit("changevote",{
                 status:event.data.status
               })
-              this.$router.push("/vote_m");
+              this.$router.replace("/vote_m");
             }else{
               _this.$message({
                 message: event.message,
@@ -134,7 +148,7 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
     }

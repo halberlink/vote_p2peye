@@ -43,4 +43,14 @@
 		background: url('../../assets/banner.png') no-repeat 0 -325px ;
 	}
 </style>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+  export default {
+    name: 'banner',
+    data () {
+      return {
+      }
+    },
+    methods:{
+    }
+  }
+</script>

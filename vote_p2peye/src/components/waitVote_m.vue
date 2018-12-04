@@ -58,11 +58,15 @@
         password:'',
         lock:false,
         jugeList:[],
-        openSocket:false
+        openSocket:false,
+        websock:null
       }
     },
     created:function(){
       this.initWebSocket();
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
       jumpTo:function(url){
@@ -131,7 +135,8 @@
               this.$store.commit("changevote",{
                 status:event.data.status
               })
-              this.$router.push("/tjInfo_m");
+
+              this.$router.replace("/tjInfo_m");
             }else{
               _this.$message({
                 message: event.message,
@@ -149,7 +154,6 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
         this.openSocket = false
       },
     }

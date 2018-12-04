@@ -4,49 +4,53 @@
     </mt-header> -->
     <banner></banner>
     <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
-    <div class="ui-Candidate ui-contentbg">
-      <div class="ui-listtitle">候选人</div>
-      <div class="ui-list">
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-      </div>
-      <div class="enter-key" @click="startVote"></div>
-    </div>
-    <div class="ui-judges">
-      <div class="ui-listtitle">评委席</div>
-      <div class="ui-list">
-        <div class="ui-list-item" v-for="item in jugeList">
-          <div class="ui-chair">
-            <div class="ui-name">{{item.uname}}</div>
+    <div class="ui-content">
+      <div class="ui-main">
+        <div class="ui-Candidate ui-contentbg">
+          <div class="ui-listtitle">候选人</div>
+          <div class="ui-list">
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
           </div>
-          <!--<div class="ui-voted"></div>-->
+          <div class="enter-key" @click="startVote">下一环节</div>
+        </div>
+        <div class="ui-judges">
+          <div class="ui-listtitle">评委席</div>
+          <div class="ui-list">
+            <div class="ui-list-item" v-for="item in jugeList">
+              <div class="ui-chair">
+                <div class="ui-name">{{item.uname}}</div>
+              </div>
+              <!--<div class="ui-voted"></div>-->
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="countList">
-      <DataList :dataList="sortList"></DataList>
+      <div :class="isFixd?'countList fixd':'countList static'">
+        <DataList :dataList="sortList"></DataList>
+      </div>
     </div>
   </div>
 
@@ -57,9 +61,6 @@
   import DataList from './common/countList.vue'
   import banner from './common/banner';
   export default {
-    components:{
-      banner
-    },
     name: 'waitVote',
     data () {
       return {
@@ -69,47 +70,14 @@
         lock:false,
         openSocket:false,
         jugeList:[],
-        dataList:[
-          {
-            name:"1",
-            job:"2",
-            count:2.3
-          },
-          {
-            name:"1",
-            job:"2",
-            count:1
-          },
-          {
-            name:"1",
-            job:"2",
-            count:4.5
-          },
-          {
-            name:"1",
-            job:"2",
-            count:3
-          },
-          {
-            name:"1",
-            job:"2",
-            count:5.6
-          },
-          {
-            name:"1",
-            job:"2",
-            count:3.4
-          },
-          {
-            name:"1",
-            job:"2",
-            count:3.2
-          },
-        ]
+        dataList:[],
+        websock:null,
+        isFixd:false
       }
     },
     components:{
-      DataList
+      DataList,
+      banner
     },
     computed:{
       sortList:function(){
@@ -121,7 +89,21 @@
       }
     },
     created:function(){
+      var _this = this;
       this.initWebSocket();
+
+
+      window.addEventListener('scroll',function(){
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        if(st <= 225){
+          _this.isFixd = false
+        }else{
+          _this.isFixd = true
+        }
+      },false);
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
       jumpTo:function(url){
@@ -164,7 +146,6 @@
 
         event = JSON.parse(event.data)
         console.log(event)
-
         switch (event.interface){
           case "info":
             //获取进程状态
@@ -187,10 +168,22 @@
             //获取进程状态
             if(event.code == 200){
               localStorage.setItem("status",event.data.status);
-              this.$store.commit("changevote",{
-                status:event.data.status
-              })
-              this.$router.push("/tjInfo");
+
+              this.$router.replace("/tjInfo");
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "rank":
+            //获取进程状态
+            if(event.code == 200){
+              localStorage.setItem("status",event.data.status);
+
+
             }else{
               _this.$message({
                 message: event.message,
@@ -208,7 +201,7 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
       startVote(){

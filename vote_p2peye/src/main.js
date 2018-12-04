@@ -25,56 +25,97 @@ String.prototype.trim = function(){
   //从空格开始（至少一个空格），中间任意个字符，从空格结束（至少一个空格）
   return this.replace(/^\s+(.*?)\s+$/,'$1');
 }
+var u = navigator.userAgent;
+var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //Android终端
+var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+var isMobile = (isiOS || isAndroid);
+const ingStatus =  localStorage.getItem("ingStatus")
 
 router.beforeEach((to, from, next) => {
   /* 路由发生变化修改页面title */
   if (to.meta.title) {
     document.title = to.meta.title
   }
-var u = navigator.userAgent;
-var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //Android终端
-var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
   //是移动端 进入投票页面
   //PC端进入 开始投票页面
-  console.log(store.state.status);
+  if(!store.state.isLogin && to.path !== '/'){
 
+    next({
+      path:'/',
+      replace:true
+    })
+  }
+  if(isMobile){
 
-  // if(localStorage.getItem("status") == 2){
-  //   next({
-  //     path:"/vote_m"
-  //   })
-  //   return;
-  // }
-
-
-  if (to.path === '/' && (isiOS || isAndroid)) {
-    //已经录入过直接进入投票 分不同投票状态进入不同的页面
-
-    // next({
-    //   path:"/waitVote_m"
-    // })
-    if(localStorage.getItem("USER")){
-
+    if(to.path === '/waitVote_m' && ingStatus == '2'){
+      console.log(store.state.ingstatus);
       next({
-        path:"/index"
+        path:'/vote_m',
+        replace:true
       })
 
+    }else if(to.path === '/waitVote_m' && ingStatus == '1'){
+      next({
+        path:'/tjInfo_m',
+        replace:true
+      })
 
     }else{
-      next({
-        path:"/index_m"
-      })
+      next()
     }
 
+    // if(to.path === '/vote_m' && ingStatus != '1'){
+    //   next({
+    //     path:'/voteEnd_m',
+    //     replace:true
+    //   })
+    //   return
+    // }else if(to.path === '/waitVote_m' && ingStatus == '1'){
+    //   console.log(store.state.ingstatus);
+    //   next({
+    //     path:'/vote_m',
+    //     replace:true
+    //   })
+    //   return
+    // }else if(to.path === '/waitVote_m' && ingStatus == '3'){
+    //   next({
+    //     path:'/tjInfo_m',
+    //     replace:true
+    //   })
+    //   return
+    // }else{
+    //   next();
+    // }
 
-  }else if(to.path === '/vote' && (isiOS || isAndroid)) {
-    next({
-      path:"/vote_m"
-    })
-  }else{
-    next()
+
+    if (to.path === '/') {
+
+      next({
+        path:"/index_m",
+        replace:true
+      })
+
+
+    }else if(to.path === '/waitVote') {
+      next({
+        path:"/waitVote_m",
+        replace:true
+      })
+    }else if(to.path === '/tjInfo') {
+      next({
+        path:"/tjInfo_m",
+        replace:true
+      })
+    }else if(to.path === '/vote') {
+      next({
+        path:"/vote_m",
+        replace:true
+      })
+    }
   }
 
+  next();
 
 });
 /* eslint-disable no-new */

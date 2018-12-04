@@ -51,7 +51,8 @@
         lock:false,
         openSocket:false,
         peopleInfo:{type:1},
-        dataList:[]
+        dataList:[],
+        websock:null
       }
     },
     components:{
@@ -68,6 +69,10 @@
     },
     created:function(){
       this.initWebSocket();
+    },
+    beforeDestroy:function(){
+      console.log("开始投票")
+      this.websock.close()
     },
     methods:{
       nextStep:function() {
@@ -144,7 +149,7 @@
               this.$store.commit("changevote",{
                 status:event.data.status
               })
-              this.$router.push("/vote");
+              this.$router.replace("/vote");
             }else{
               _this.$message({
                 message: event.message,
@@ -161,7 +166,7 @@
 
       },
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
     }

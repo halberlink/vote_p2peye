@@ -5,7 +5,9 @@ Vue.use(Vuex);
 const state={
   status:0,
   uid:0,
-  username:''
+  username:'',
+  ingstatus:0,
+  isLogin:false
 }
 
 export default new Vuex.Store({
@@ -16,9 +18,11 @@ export default new Vuex.Store({
     },
     changelogin(state,payload){
 
-      state.uid = payload.uid
-      state.username = payload.username
+      state.isLogin = payload.isLogin
     },
+    changeIngStatus(state,payload){
+      state.ingstatus = payload.ingstatus
+    }
 
   }
 });

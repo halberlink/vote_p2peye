@@ -65,12 +65,26 @@
   }
   .enter-key {
     width: 215px;
-    height: 202px;
-    background: url("../assets/enter-icon.png") no-repeat center;
-    position: absolute;
-    bottom:30px;
-    right:30px;
+    height: 100px;
+    line-height: 160px;
+    text-align: center;
+    background-color: #ffce91;
+    border-bottom: 20px solid #e04786;
+    border-radius: 40px;
+    transition: all .05s ease-out;
+    font-size: 60px;
+    color: #e04786;
+    user-select: none;
+    box-shadow: 5px 5px 40px rgba(100,100,100,0.6);
     cursor: pointer;
+    position: absolute;
+    bottom:80px;
+    right:30px;
+    &:active{
+      margin-top: 110px;
+      border-bottom-width: 10px;
+      box-shadow: 5px 5px 20px rgba(100,100,100,0.6);
+    }
   }
   .ui-judges {
     width:1200px;

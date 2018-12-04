@@ -8,6 +8,7 @@ import waitVote_m from '@/components/waitVote_m'
 import tjInfo_m from '@/components/tjInfo_m'
 import tjInfo from '@/components/tjInfo'
 import vote_m from '@/components/vote_m'
+import voteEnd_m from '@/components/voteEnd_m'
 import vote from '@/components/vote'
 import InformationEntry from '@/components/InformationEntry'
 
@@ -89,6 +90,14 @@ export default new Router({
       component: vote_m,
       meta:{
         title: '评选人投票'
+      }
+    },
+    {
+      path: '/voteEnd_m',
+      name: 'voteEnd_m',
+      component: voteEnd_m,
+      meta:{
+        title: '评选人结束投票'
       }
     }
   ]

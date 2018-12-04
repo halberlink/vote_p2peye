@@ -8,7 +8,7 @@
       <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
         <div class="face">
-          <div class="face-icon-new face-icon"></div>
+          <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="info">
           <div class="info-item">
@@ -34,12 +34,12 @@
           </div>
         </div>
       </div>
-      <div class="enter-key"></div>
+      <div class="enter-key" @click="nextStep" v-if="allvoted"> 下一环节</div>
     </div>
     <div class="ui-judges">
       <div class="ui-listtitle">评委席</div>
       <div class="ui-list">
-        <div class="ui-list-item" v-for="item in jugeList">
+        <div class="ui-list-item" v-for="item in filterList">
           <div class="ui-chair">
             <div class="ui-name">{{item.uname}}</div>
           </div>
@@ -71,29 +71,56 @@
         openSocket:false,
         jugeList:[],
         peopleInfo:{},
-        dataList:[]
+        dataList:[],
+        websock:null,
+        votedList:[],
+        allvoted:true
       }
     },
     components:{
       DataList
     },
     computed:{
-      sortList:function(){
-        return this.dataList.sort(function(a,b){
-          var x = a["count"];
-          var y = b["count"];
-          return y-x;
-        });
+      filterList:function(){
+        var newList = [];
+        var temp = {};
+        for(let i in this.jugeList){
+          if(!temp[this.jugeList[i].id]){
+            newList.push(this.jugeList[i])
+            temp[this.jugeList[i].id] = true;
+          }
+
+        }
+        return newList;
       }
     },
     created:function(){
       this.initWebSocket();
     },
+    beforeDestroy:function(){
+      console.log("开始投票")
+      this.websock.close()
+    },
     methods:{
       jumpTo:function(url){
         this.$router.push(url)
       },
-      register:function() {
+      nextStep:function() {
+        var _this = this;
+        this.votedList = [];
+        if(this.openSocket){
+          this.websocketsend({
+            interface:"next",
+            data:''
+          });
+        }else{
+          _this.$message({
+            message: "socket未连接",
+            type: 'error'
+          });
+        }
+
+
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = {};
@@ -117,8 +144,6 @@
       websocketonopen() {
         console.log("WebSocket连接成功");
         //进入房间通知
-
-
         this.openSocket = true
       },
       websocketonerror(e) { //错误
@@ -131,13 +156,28 @@
         event = JSON.parse(event.data)
         console.log(event)
 
+
         switch (event.interface){
           case "info":
             //获取进程状态
             if(event.code == 200){
 
               this.jugeList = event.data.online;
+
               this.peopleInfo = event.data.ing[0];
+
+              this.votedList = [];
+
+//              for(let i in this.jugeList){
+//                if(this.filterList[i].vote_status == 1){
+//                  this.votedList.push(1);
+//                }
+//
+//              }
+//              alert(7)
+//              if(this.votedList.length >= this.filterList.length){
+//                this.allvoted = true;
+//              }
 
             }else{
               _this.$message({
@@ -150,7 +190,22 @@
           case "vote":
             //获取进程状态
             if(event.code == 200){
+              this.votedList.push(1);
 
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "next":
+            //获取进程状态
+            if(event.code == 200){
+              this.$router.replace("/tjInfo")
+            }else if(event.code == 4001){
+              this.$router.replace("/rankList")
             }else{
               _this.$message({
                 message: event.message,
@@ -168,7 +223,7 @@
 
       },
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
     }
