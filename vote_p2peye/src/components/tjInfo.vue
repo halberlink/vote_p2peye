@@ -1,10 +1,11 @@
 <template>
   <div class="ui-waitvote">
-    <mt-header title="评选人等待投票">
+    <!-- <mt-header title="评选人信息公示">
     </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div>
-    <div class="ui-Candidate">
-      <div class="ui-tit">候选人</div>
+    <div @click="jumpTo('/InformationEntry')">213</div> -->
+    <banner></banner>
+    <div class="ui-Candidate ui-contentbg">
+      <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
         <div class="face">
           <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
@@ -32,13 +33,21 @@
       </div>
       <div class="enter-key" @click="nextStep"></div>
     </div>
+    <div class="ui-judges">
+      <div class="ui-listtitle">推荐语</div>
+      <div class="ui-list">成都发布国家看到附近的附件花费的海景房的机会</div>
+    </div>
   </div>
 
 </template>
 
 <script>
   import { Toast } from 'mint-ui';
+  import banner from './common/banner';
   export default {
+    components:{
+      banner
+    },
     name: 'tjInfo',
     data () {
       return {
