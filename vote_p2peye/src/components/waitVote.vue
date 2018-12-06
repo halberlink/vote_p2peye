@@ -99,7 +99,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 

@@ -103,7 +103,7 @@
 	}
 	//getPeoples();
 
-	ws=new WebSocket("ws://192.168.5.156:9527");
+	ws=new WebSocket("ws://192.168.3.12:9527");
 	ws.onmessage=function(event){
 		var data = JSON.parse(event.data);
 		console.log(data);
