@@ -199,17 +199,31 @@
         this.openSocket = false
       },
       startVote(){
-        if(this.openSocket){
-          this.websocketsend({
-            "interface":"start",
-            "data":""
-          })
-        }else{
-          this.$message({
-            message: "socket未连接",
-            type: 'error'
+        var _this = this;
+        this.$confirm('此操作将使整体流程开始并且此流程不可逆，\n请确认全员都已进入并已准备好开始, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if(_this.openSocket){
+              _this.websocketsend({
+                "interface":"start",
+                "data":""
+              })
+            }else{
+              _this.$message({
+                message: "socket未连接",
+                type: 'error'
+              });
+            }
+        }).catch(() => {
+            this.$message({
+            type: 'info',
+            message: '已取消开始'
           });
-        }
+        });
+
+
 
       }
     }

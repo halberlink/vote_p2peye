@@ -131,9 +131,14 @@
       },
       nextStep:function() {
         var _this = this;
-        this.votedList = [];
-        if(this.openSocket){
-          this.websocketsend({
+        this.$confirm('请确定当前人员已全部评分完毕，已准备好开始下一个演讲', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          _this.votedList = [];
+        if(_this.openSocket){
+          _this.websocketsend({
             interface:"next",
             data:''
           });
@@ -143,6 +148,16 @@
             type: 'error'
           });
         }
+      }).catch(() => {
+          _this.$message({
+          type: 'info',
+          message: '已取消继续'
+        });
+      });
+
+
+
+
 
 
       },

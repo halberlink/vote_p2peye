@@ -20,6 +20,7 @@
 
 <script>
   import { Toast } from 'mint-ui';
+  import { MessageBox } from 'mint-ui';
   export default {
     name: 'index_m',
     data () {
@@ -50,6 +51,8 @@
       register:function(){
 
         var _this = this;
+
+
         if(this.username == ""){
           Toast({
             message: '请输入姓名',
@@ -67,21 +70,28 @@
 
         this.lock = true;
 
-
-        var loginData = {
-          "interface":"register",
-          "data":Data
-        }
-        console.log(Data)
-        if(this.openSocket){
-          console.log(222222222)
-          this.websocketsend(loginData);
-        }else{
+        MessageBox.confirm('确定已准备开始，并进入投票流程？').then(action => {
+          var loginData = {
+            "interface":"register",
+            "data":Data
+          }
+          console.log(Data)
+          if(_this.openSocket){
+            this.websocketsend(loginData);
+          }else{
+            _this.$message({
+              message: "socket未连接",
+              type: 'error'
+            });
+          }
+        }).catch(function(){
           _this.$message({
-            message: "socket未连接",
-            type: 'error'
+            message: "已取消",
+            type: 'info'
           });
-        }
+        });
+
+
       },
       initWebSocket(){ //初始化weosocket
 

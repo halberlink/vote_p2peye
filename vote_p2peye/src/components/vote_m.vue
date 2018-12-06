@@ -59,6 +59,7 @@
 
 <script>
   import { Toast } from 'mint-ui';
+  import { MessageBox } from 'mint-ui';
   export default {
     name: 'vote_m',
     data () {
@@ -98,17 +99,26 @@
     methods:{
       subValue:function(){
         var _this = this;
+        
+        MessageBox.confirm('确定提交当前评分？').then(action => {
+          var Data = {
+            interface : "vote",
+            data:{
+              from_id:_this.userInfo.id,
+              to_id:_this.peopleInfo.id,
+              count:_this.rangeValue
+            }
+          };
+        _this.websocketsend(Data)
+      }).catch(function(){
+          _this.$message({
+            message: "已取消",
+            type: 'info'
+          });
+        });
 
-        var Data = {
-          interface : "vote",
-          data:{
-            from_id:this.userInfo.id,
-            to_id:this.peopleInfo.id,
-            count:this.rangeValue
-          }
-        };
-        console.log("vote")
-        this.websocketsend(Data)
+
+
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = this.userInfo;

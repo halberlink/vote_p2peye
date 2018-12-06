@@ -35,7 +35,7 @@
 
         </div>
       </div>
-      <div class="enter-key" @click="nextStep">开始投票</div>
+      <div class="enter-key" @click="nextStep">开始评分</div>
     </div>
   </div>
 
@@ -109,17 +109,34 @@
     },
     methods:{
       nextStep:function() {
-        if(this.openSocket){
-          this.websocketsend({
+
+        var _this = this;
+        this.$confirm('是否开始当前候选人的评分', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+        if(_this.openSocket){
+          _this.websocketsend({
             "interface":"startVote",
             "data":""
           })
         }else{
-          this.$message({
+          _this.$message({
             message: "socket未连接",
             type: 'error'
           });
         }
+      }).catch(() => {
+          _this.$message({
+          type: 'info',
+          message: '已取消继续'
+        });
+      });
+
+
+
+
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = {};
