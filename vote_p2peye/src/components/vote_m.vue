@@ -1,9 +1,30 @@
 <template>
   <div class="ui-vote">
-    <mt-header title="评选人投票">
-    </mt-header>
+    <div class="vote-history">
+      <div class="ui-tit">历史评分</div>
+
+      <div class="history-scroll" refs="scrollbox">
+        <div class="vote-history-item" v-for="item in sortList">
+          <div class="face">
+            <img src="../assets/face.jpg" alt="">
+            <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
+          </div>
+          <div class="num">
+            <div class="name">
+              <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
+              <span class="percent">{{item.count}}</span>
+            </div>
+            <div class="range">
+              <mt-progress :value="item.count | toNumber" :barHeight="10" :class="item.curPeople?'curPeople':''">
+                <div slot="start"></div>
+                <div slot="end"></div>
+              </mt-progress>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="vote-info">
-      <div class="ui-tit">当前评分</div>
       <div class="vote-people">
         <div class="vote-people-info">
           <div class="face">
@@ -20,47 +41,30 @@
           <!--</div>-->
         <!--</div>-->
         <span class="currange">{{rangeValue/10}}</span>
-        <div class="ranglimit">
-          <span>0</span>
-          <span>10</span>
-        </div>
-        <div class="vote-range">
-          <mt-range v-model="rangeValue"
-                    :min="0"
-                    :max="100"
-                    :step="1"
-                    :bar-height="4"
-                    >
-          </mt-range>
-        </div>
+
+      </div>
+
+    </div>
+
+    <div class="float-index">
+      <div class="ranglimit">
+        <span>0</span>
+        <span>10</span>
+      </div>
+      <div class="vote-range">
+        <mt-range v-model="rangeValue"
+                  :min="0"
+                  :max="100"
+                  :step="1"
+                  :bar-height="4"
+        >
+        </mt-range>
       </div>
       <div class="vote-range">
         <mt-button @click="subValue" size="large" type="primary">提交评分</mt-button>
       </div>
     </div>
-    <div class="vote-history">
-      <div class="ui-tit">历史评分</div>
 
-      <div class="history-scroll">
-        <div class="vote-history-item" v-for="item in historyList">
-          <div class="face">
-            <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
-          </div>
-          <div class="num">
-            <div class="name">
-              <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
-              <span class="percent">{{item.count}}</span>
-            </div>
-            <div class="range">
-              <mt-progress :value="item.count | toNumber" :barHeight="10">
-                <div slot="start"></div>
-                <div slot="end"></div>
-              </mt-progress>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 
 </template>
@@ -76,19 +80,51 @@
         rangeValue:0,
         openSocket:false,
         userInfo:{},
+        curCountJuge:{},
         peopleInfo:{
           name:'--',
           job:'--',
           type:0,
           reason:'--'
         },
-        historyList:[],
+        historyList:[
+        ],
         websock:null
       }
     },
     filters:{
       toNumber:function(value){
         return value?Number(value)*10:0;
+      }
+    },
+    watch: {
+      rangeValue(newName, oldName) {
+
+        var curCountJuge = {
+          count:newName/10,
+          curPeople:true,
+          to_info:{
+            type:this.peopleInfo.type,
+            job:this.peopleInfo.job,
+            name:this.peopleInfo.name
+          }
+        }
+        for(let i in this.sortList){
+          if(this.sortList[i].to_info.name == curCountJuge.to_info.name){
+            document.querySelector(".history-scroll").scrollTop = parseInt(i/6)*320;
+            this.sortList.splice(i,1,curCountJuge);
+            break;
+          }
+        }
+      }
+    },
+    computed:{
+      sortList:function(){
+        return this.historyList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){
@@ -98,6 +134,8 @@
       }else{
         this.userInfo.id=0;
       }
+
+
       this.initWebSocket();
     },
     beforeDestroy:function(){
@@ -173,6 +211,16 @@
                   this.historyList.push(event.data.history[name]);
                 }
               }
+
+              var curCountJuge = {
+                count:this.rangeValue,
+                to_info:{
+                  type:this.peopleInfo.type,
+                  job:this.peopleInfo.job,
+                  name:this.peopleInfo.name
+                }
+              }
+              this.historyList.push(curCountJuge);
             }else{
               _this.$message({
                 message: event.message,
@@ -238,7 +286,9 @@
     -webkit-background-size: cover;
     background-size: cover;
   }
-
+  .curPeople .mt-progress-progress{
+    background: #dab567;
+  }
 </style>
 <style lang="scss" type="text/css" scoped>
 

@@ -4,49 +4,62 @@
   src:url("../styles/font/DINAlternateBold.ttf");
 }
 .ui-vote {
+  padding-top: px2rem(250px);
   font-size: px2rem(30px);
   color:#fff;
   .ranglimit {
     padding: 0 px2rem(5px);
     display: flex;
     justify-content: space-between;
+    color: #dab567;
   }
   .ui-tit {
     height:px2rem(60px);
-    line-height: px2rem(100px);
+    line-height: px2rem(60px);
     text-align: center;
     font-size: px2rem(40px);
+    text-shadow: 0 0 px2rem(15px) rgba(0,0,0,1);
+  }
+  .float-index {
+    width:px2rem(650px);
+    height:px2rem(220px);
+    position: fixed;
+    bottom: px2rem(30px);
+    left:px2rem(50px);
+    text-shadow: 0 0 px2rem(20px) rgba(0,0,0,2);
   }
   .vote-info {
-    width:px2rem(650px);
-    margin:0 auto;
+    width:100%;
+    height:px2rem(270px);
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    position: fixed;
+    top:0;
+    left: 0;
     background: -webkit-linear-gradient(180deg, #a067ef, #f681e4);
     background: -o-linear-gradient(180deg, #a067ef, #f681e4);
     background: -moz-linear-gradient(180deg, #a067ef, #f681e4);
     background: linear-gradient(180deg, #a067ef, #f681e4);
-    -webkit-box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.4);
-    -moz-box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.7);
-    box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.7);
-    padding:0 px2rem(20px);
-    padding-bottom: px2rem(20px);
-    -webkit-border-radius: px2rem(8px);
-    -moz-border-radius: px2rem(8px);
-    border-radius: px2rem(16px);
-    margin-bottom:px2rem(20px);
-    margin-top: px2rem(20px);
   }
   .currange {
-    display: block;
+    width: 100%;
+    height:px2rem(140px);
+    text-align: center;
     font-size: px2rem(180px);
-    margin-bottom: px2rem(60px);
     font-family:"P2peyeSelfFont" ;
-
+    position: absolute;
+    bottom: px2rem(50px);
+    left:0;
   }
   .vote-people {
-    margin-bottom:px2rem(40px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   .vote-people-info {
-    height:px2rem(136px);
+    height:px2rem(90px);
+    padding-top: px2rem(20px);
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -78,8 +91,8 @@
 
   }
   .face {
-    width: px2rem(120px);
-    height: px2rem(120px);
+    width: px2rem(60px);
+    height: px2rem(60px);
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -133,8 +146,8 @@
     }
     .face-icon {
       position: absolute;
-      right: px2rem(-25px);
-      top:px2rem(-10px);
+      right: px2rem(-15px);
+      top:px2rem(-5px);
     }
     .face-icon-new{
       width:px2rem(38px);
@@ -151,7 +164,7 @@
       background-size: contain;
     }
     .history-scroll {
-      height:px2rem(350px);
+      height:px2rem(720px);
       overflow-y: scroll;
     }
     .vote-history-item {
@@ -159,6 +172,7 @@
 
       justify-content: flex-start;
       align-items: center;
+      margin-bottom:px2rem(20px);
       .num {
         width:px2rem(550px);
         text-align: left;
@@ -170,6 +184,9 @@
       .percent {
         align-self: center;
       }
+    }
+    .vote-history-item+.vote-history-item{
+      margin-top:px2rem(20px);
     }
   }
 

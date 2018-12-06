@@ -37,15 +37,11 @@ export default {
 .mint-header{
   background-color: #09e;
 }
-/*.mt-progress-progress {*/
-  /*background: -webkit-linear-gradient(270deg, #a067ef, #f681e4);*/
-  /*background: -o-linear-gradient(270deg, #a067ef, #f681e4);*/
-  /*background: -moz-linear-gradient(270deg, #a067ef, #f681e4);*/
-  /*background: linear-gradient(270deg, #a067ef, #f681e4);*/
-  /*-webkit-border-radius: 20px;*/
-  /*-moz-border-radius: 20px;*/
-  /*border-radius: 20px;*/
-/*}*/
+.mt-progress-progress {
+  -webkit-border-radius: 0.333rem;
+  -moz-border-radius: 0.333rem;
+  border-radius: 0.333rem;
+}
 .mt-range-thumb {
   background-color: #dab567;
 }
