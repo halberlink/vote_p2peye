@@ -15,17 +15,17 @@
         <div class="vote-num">
           <div class="key">评分：</div>
           <div class="value">
-            <input type="number" v-model="rangeValue"></input>
+            <span>{{rangeValue/10}}</span>
 
           </div>
         </div>
         <div class="vote-range">
           <mt-range v-model="rangeValue"
-                    :min="0.0"
+                    :min="0"
                     :max="100"
                     >
-            <div slot="start">0.0</div>
-            <div slot="end">100.0</div>
+            <div slot="start">0</div>
+            <div slot="end">10</div>
           </mt-range>
         </div>
       </div>
@@ -80,7 +80,7 @@
     },
     filters:{
       toNumber:function(value){
-        return value?parseInt(Number(value)):0;
+        return value?Number(value)*10:0;
       }
     },
     created:function(){
@@ -106,7 +106,7 @@
             data:{
               from_id:_this.userInfo.id,
               to_id:_this.peopleInfo.id,
-              count:_this.rangeValue
+              count:_this.rangeValue/10
             }
           };
         _this.websocketsend(Data)
