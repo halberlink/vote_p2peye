@@ -23,6 +23,7 @@
           <mt-range v-model="rangeValue"
                     :min="0"
                     :max="100"
+                    :step="1"
                     >
             <div slot="start">0</div>
             <div slot="end">10</div>
