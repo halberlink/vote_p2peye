@@ -410,7 +410,7 @@ class module
 			return self::formartCode($interfaceType,4008,'',"未登录或非管理员!");	
 		}
 
-		$res = self::queryMysql("select * from peoples where name ='".$name."'");
+		$res = self::queryMysql("select * from peoples where name ='".$name."'")[0];
 
 		if(!empty($res)){
 			return self::formartCode($interfaceType,4010,$res,"已存在");	
