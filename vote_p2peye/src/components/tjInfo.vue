@@ -1,9 +1,12 @@
 <template>
   <div class="ui-waitvote">
-    <!-- <mt-header title="评选人信息公示">
-    </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div> -->
     <banner></banner>
+    <div class="countList fl">
+      <DataList :dataList="newsortList" name="评分实时榜单新员工"></DataList>
+    </div>
+    <div class="countList fr">
+      <DataList :dataList="oldsortList" name="评分实时榜单老员工"></DataList>
+    </div>
     <div class="ui-Candidate ui-contentbg">
       <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
@@ -24,17 +27,14 @@
             <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
             <div class="info-item-value" v-else>老员工</div>
           </div>
-          <div class="info-item">
-            <div class="info-item-key">推荐语：</div>
-            <div class="info-item-value">{{peopleInfo.reason}}</div>
-          </div>
+          <!--<div class="info-item">-->
+            <!--<div class="info-item-key">推荐语：</div>-->
+            <!--<div class="info-item-value">{{peopleInfo.reason}}</div>-->
+          <!--</div>-->
 
         </div>
       </div>
-      <div class="enter-key" @click="nextStep"></div>
-    </div>
-    <div class="countList">
-      <DataList :dataList="sortList"></DataList>
+      <div class="enter-key" @click="nextStep">开始投票</div>
     </div>
   </div>
 
@@ -55,17 +55,47 @@
         password:'',
         lock:false,
         openSocket:false,
-        peopleInfo:{type:1},
+        peopleInfo:{
+          name:'--',
+          job:'--',
+          type:0,
+          reason:'--'
+        },
+        olddataList:[],
+        newdataList:[],
+        alldataList:[],
         dataList:[],
         websock:null
       }
     },
     components:{
-      DataList
+      DataList,
+      banner
     },
     computed:{
       sortList:function(){
         return this.dataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
+      },
+      oldsortList:function(){
+        return this.olddataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
+      },
+      newsortList:function(){
+        return this.newdataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
+      },
+      allortList:function(){
+        return this.alldataList.sort(function(a,b){
           var x = a["count"];
           var y = b["count"];
           return y-x;
@@ -102,7 +132,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -138,6 +168,26 @@
                 status:event.data.status
               })
               this.peopleInfo = event.data.ing[0];
+
+
+              this.newdataList = [];
+              this.olddataList = [];
+              this.alldataList = [];
+              //榜单
+              let RankCount = event.data.rank;
+
+              for(let id in RankCount){
+                let countItem = {};
+                countItem.count = RankCount[id][0].count;
+                countItem.job = RankCount[id][0].info.job;
+                countItem.name = RankCount[id][0].info.name;
+                this.alldataList.push(countItem);
+                if(RankCount[id][0].info.type == 1){
+                  this.newdataList.push(countItem);
+                }else{
+                  this.olddataList.push(countItem);
+                }
+              }
 
             }else{
               _this.$message({
@@ -181,7 +231,16 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    background: #fafafa;
+  }
+  .fl{
+    float: left;
+  }
+  .fr{
+    float: right;
+  }
+  .countList{
+    width: 340px;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

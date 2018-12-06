@@ -3,7 +3,7 @@
     <mt-header title="评选人投票">
     </mt-header>
     <div class="vote-info">
-      <div class="ui-tit">当前得分</div>
+      <div class="ui-tit">当前评分</div>
       <div class="vote-people">
         <div class="vote-people-info">
           <div class="face">
@@ -18,18 +18,22 @@
 
           </div>
         </div>
-        <mt-range v-model="rangeValue"
-                  :min="0"
-                  :max="10"
-                  :step="1">
-          <div slot="start">0</div>
-          <div slot="end">10</div>
-        </mt-range>
+        <div class="vote-range">
+          <mt-range v-model="rangeValue"
+                    :min="0"
+                    :max="10"
+                    :step="1">
+            <div slot="start">0</div>
+            <div slot="end">10</div>
+          </mt-range>
+        </div>
       </div>
-      <mt-button @click="subValue" size="large" type="primary">提交评分</mt-button>
+      <div class="vote-range">
+        <mt-button @click="subValue" size="large" type="primary">提交评分</mt-button>
+      </div>
     </div>
     <div class="vote-history">
-      <div class="ui-tit">历史得分</div>
+      <div class="ui-tit">历史评分</div>
       <div class="vote-history-item" v-for="item in historyList">
         <div class="face">
           <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
@@ -62,7 +66,12 @@
         rangeValue:0,
         openSocket:false,
         userInfo:{},
-        peopleInfo:{},
+        peopleInfo:{
+          name:'--',
+          job:'--',
+          type:0,
+          reason:'--'
+        },
         historyList:[],
         websock:null
       }
@@ -104,7 +113,7 @@
         var userInfo = this.userInfo;
         console.log(this.userInfo)
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -135,13 +144,6 @@
           case "info":
             //获取进程状态
             if(event.code == 200){
-
-//              for(let i in event.data.online){
-//                if(event.data.online[i].id == this.userInfo.id && event.data.online[i].vote_state == 1){
-//                  this.$router.replace("/voteEnd_m");
-//                }
-//              }
-
 
               this.peopleInfo = event.data.ing[0];
 
@@ -213,6 +215,7 @@
   html,body{
     background: #cccccc;
   }
+
 </style>
 <style lang="scss" type="text/css" scoped>
 

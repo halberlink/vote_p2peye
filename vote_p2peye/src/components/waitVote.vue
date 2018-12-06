@@ -4,53 +4,34 @@
     </mt-header> -->
     <banner></banner>
     <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
+    <div class="ui-main">
+      <div class="ui-Candidate ui-contentbg">
+        <div class="ui-listtitle">候选人</div>
+        <div class="ui-list">
+          <div class="ui-list-item" v-for="item in CandidateList ">
+            <div class="ui-face"></div>
+            <div class="ui-name">{{item.name}}</div>
+          </div>
+        </div>
+        <div class="enter-key" @click="startVote">下一环节</div>
+      </div>
+      <div class="ui-judges">
+        <div class="ui-listtitle">评委席</div>
+        <div class="ui-list">
+          <div class="ui-list-item" v-for="item in jugeList">
+            <div class="ui-chair">
+              <div class="ui-name">{{item.uname}}</div>
+            </div>
+            <!--<div class="ui-voted"></div>-->
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="ui-content">
-      <div class="ui-main">
-        <div class="ui-Candidate ui-contentbg">
-          <div class="ui-listtitle">候选人</div>
-          <div class="ui-list">
-            <div class="ui-list-item">
-              <div class="ui-face"></div>
-              <div class="ui-name">张三</div>
-            </div>
-            <div class="ui-list-item">
-              <div class="ui-face"></div>
-              <div class="ui-name">张三</div>
-            </div>
-            <div class="ui-list-item">
-              <div class="ui-face"></div>
-              <div class="ui-name">张三</div>
-            </div>
-            <div class="ui-list-item">
-              <div class="ui-face"></div>
-              <div class="ui-name">张三</div>
-            </div>
-            <div class="ui-list-item">
-              <div class="ui-face"></div>
-              <div class="ui-name">张三</div>
-            </div>
-            <div class="ui-list-item">
-              <div class="ui-face"></div>
-              <div class="ui-name">张三</div>
-            </div>
-          </div>
-          <div class="enter-key" @click="startVote">下一环节</div>
-        </div>
-        <div class="ui-judges">
-          <div class="ui-listtitle">评委席</div>
-          <div class="ui-list">
-            <div class="ui-list-item" v-for="item in jugeList">
-              <div class="ui-chair">
-                <div class="ui-name">{{item.uname}}</div>
-              </div>
-              <!--<div class="ui-voted"></div>-->
-            </div>
-          </div>
-        </div>
-      </div>
-      <div :class="isFixd?'countList fixd':'countList static'">
-        <DataList :dataList="sortList"></DataList>
-      </div>
+
+      <!--<div :class="isFixd?'countList fixd':'countList static'">-->
+        <!--<DataList :dataList="sortList"></DataList>-->
+      <!--</div>-->
     </div>
   </div>
 
@@ -64,11 +45,9 @@
     name: 'waitVote',
     data () {
       return {
-        msg: 'Welcome to Your Vue.js App',
-        username:"",
-        password:'',
         lock:false,
         openSocket:false,
+        CandidateList:[],
         jugeList:[],
         dataList:[],
         websock:null,
@@ -120,7 +99,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 

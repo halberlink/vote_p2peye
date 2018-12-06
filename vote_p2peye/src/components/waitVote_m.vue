@@ -2,7 +2,6 @@
   <div class="ui-waitvote">
     <mt-header title="评选人等待投票">
     </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div>
     <div class="ui-Candidate">
       <div class="ui-tit">候选人</div>
       <div class="ui-list">
@@ -83,7 +82,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 

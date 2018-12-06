@@ -3,7 +3,12 @@
     <!-- <mt-header title="评选人等待投票">
     </mt-header> -->
     <banner></banner>
-    <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
+    <div class="countList fl">
+      <DataList :dataList="newsortList" name="评分实时榜单新员工"></DataList>
+    </div>
+    <div class="countList fr">
+      <DataList :dataList="oldsortList" name="评分实时榜单老员工"></DataList>
+    </div>
     <div class="ui-Candidate ui-contentbg">
       <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
@@ -20,21 +25,13 @@
             <div class="info-item-value">{{peopleInfo.job}}</div>
           </div>
           <div class="info-item">
-            <div class="info-item-key">入职时间：</div>
-            <div class="info-item-value">2018-12-01</div>
-          </div>
-          <div class="info-item">
-            <div class="info-item-key">推荐人：</div>
-            <div class="info-item-value">张某某</div>
-          </div>
-          <div class="info-item">
             <div class="info-item-key">类别 ：</div>
             <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
             <div class="info-item-value" v-else>老员工</div>
           </div>
         </div>
       </div>
-      <div class="enter-key" @click="nextStep" v-if="allvoted"> 下一环节</div>
+      <div class="enter-key" @click="nextStep" v-if="allvoted">下一员工</div>
     </div>
     <div class="ui-judges">
       <div class="ui-listtitle">评委席</div>
@@ -47,15 +44,10 @@
         </div>
       </div>
     </div>
-    <div class="countList">
-      <DataList :dataList="newsortList" name="新员工"></DataList>
-    </div>
-    <div class="countList">
-      <DataList :dataList="oldsortList" name="老员工"></DataList>
-    </div>
-    <div class="countList">
-      <DataList :dataList="allortList" name="全部排行"></DataList>
-    </div>
+
+    <!--<div class="countList">-->
+      <!--<DataList :dataList="allortList" name="全部排行"></DataList>-->
+    <!--</div>-->
   </div>
 
 </template>
@@ -73,7 +65,12 @@
         lock:false,
         openSocket:false,
         jugeList:[],
-        peopleInfo:{},
+        peopleInfo:{
+          name:'--',
+          job:'--',
+          type:0,
+          reason:'--'
+        },
         olddataList:[],
         newdataList:[],
         alldataList:[],
@@ -157,7 +154,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -274,6 +271,15 @@
 <style>
   html,body{
     background: #fafafa;
+  }
+  .fl{
+    float: left;
+  }
+  .fr{
+    float: right;
+  }
+  .countList{
+    width: 340px;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

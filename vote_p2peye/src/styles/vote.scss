@@ -1,7 +1,7 @@
 .ui-waitvote {
   font-size: 20px;
   .ui-Candidate {
-    width:1200px;
+    width:600px;
 
     margin:0 auto;
     background-color: #fff;
@@ -66,13 +66,13 @@
   .enter-key {
     width: 215px;
     height: 100px;
-    line-height: 160px;
+    line-height: 110px;
     text-align: center;
     background-color: #ffce91;
     border-bottom: 20px solid #e04786;
     border-radius: 40px;
     transition: all .05s ease-out;
-    font-size: 60px;
+    font-size: 0px;
     color: #e04786;
     user-select: none;
     box-shadow: 5px 5px 40px rgba(100,100,100,0.6);
