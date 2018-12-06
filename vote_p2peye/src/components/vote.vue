@@ -285,9 +285,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-  html,body{
-    background: #eee3ff;
-  }
   .fl{
     float: left;
   }

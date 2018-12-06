@@ -209,9 +209,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
-  html,body{
-    background: #eee3ff;
-  }
   .ui-content{
     display: flex;
     justify-content: space-between;

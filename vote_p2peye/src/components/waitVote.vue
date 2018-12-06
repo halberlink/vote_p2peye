@@ -231,11 +231,7 @@
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style>
-  html,body{
-    background: #eee3ff;
-  }
-</style>
+
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
