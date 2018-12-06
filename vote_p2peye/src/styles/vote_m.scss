@@ -20,17 +20,24 @@
     justify-content: flex-start;
     align-items: center;
   }
+  .vote-range {
+    padding:0 px2rem(25px);
+  }
   .vote-num {
     display: flex;
     justify-content: flex-start;
     margin-bottom:px2rem(40px);
     .value {
+      margin-top:px2rem(-15px);
       width:px2rem(110px);
+      height:px2rem(50px);
+      line-height: px2rem(70px);
       font-size: px2rem(40px);
       padding-bottom: px2rem(5px);
       border-bottom: 1px solid #666666;
       color: #ff9933;
     }
+
   }
   .face {
     width: px2rem(120px);

@@ -9,6 +9,7 @@
      <mt-button @click="register" size="large" type="primary">进入评选</mt-button>
    </div>
    <div class="des">*请输入姓名作为评选人的标识，非评选人请勿输入！</div>
+   <div class="des">*整个评分过程中请不要进行返回操作如果发生连接失败 刷新页面即可 谢谢配合！</div>
 
   </div>
 
@@ -74,7 +75,7 @@
       },
       initWebSocket(){ //初始化weosocket
 
-        const wsuri = "ws://192.168.5.156:9527/?0";//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?0";//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 

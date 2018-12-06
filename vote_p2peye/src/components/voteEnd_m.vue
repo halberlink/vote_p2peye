@@ -98,7 +98,7 @@
         var userInfo = this.userInfo;
         console.log(this.userInfo)
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -163,11 +163,11 @@
               this.$router.replace("/tjInfo_m")
             }else if(event.code == 4300){
               _this.$message({
-                message: "没有更多了",
+                message: "全部都已投完！谢谢参与",
                 type: 'error'
               });
 
-              
+
 
             }else{
               _this.$message({

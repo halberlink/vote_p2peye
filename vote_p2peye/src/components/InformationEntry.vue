@@ -179,7 +179,7 @@
           job : this.jobValue,
           type:this.typeValue,
           uid:30,
-          reason : this.reasonValue.trim()
+          reason : this.reasonValue
         };
 
         var addPeople = {
@@ -200,7 +200,7 @@
       },
       initWebSocket(){ //初始化weosocket
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527";//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?30";//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -273,7 +273,9 @@
     }
   }
 </script>
+<style>
 
+</style>
 <style lang="scss" type="text/css" scoped>
   @import "../styles/InformationEntry.scss";
 </style>

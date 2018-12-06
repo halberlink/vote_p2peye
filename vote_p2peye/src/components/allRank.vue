@@ -1,9 +1,6 @@
 <template>
   <div class="ui-waitvote">
-    <!-- <mt-header title="评选人等待投票">
-    </mt-header> -->
     <banner></banner>
-    <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
     <div class="ui-content">
 
       <div class="countList static">
@@ -13,7 +10,7 @@
         <DataList :dataList="newsortList" name="评分实时榜单新员工"></DataList>
       </div>
       <div class="countList static">
-        <DataList :dataList="allortList" name="评分实时榜单新员工"></DataList>
+        <DataList :dataList="allortList" name="评分实时总榜单"></DataList>
       </div>
     </div>
   </div>
@@ -34,8 +31,9 @@
         lock:false,
         openSocket:false,
         jugeList:[],
-        dataList:[],
+        olddataList:[],
         newdataList:[],
+        alldataList:[],
         websock:null,
         isFixd:false
       }
@@ -90,7 +88,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -115,7 +113,6 @@
         var _this = this;
 
         event = JSON.parse(event.data)
-        console.log(event)
         switch (event.interface){
           case "info":
             //获取进程状态
@@ -215,10 +212,16 @@
   html,body{
     background: #fafafa;
   }
+  .ui-content{
+    display: flex;
+    justify-content: space-between;
+  }
   .countList{
     width: 500px;
     height: 500px;
-    float: left;
+  }
+  .ui-content {
+    font-size: 30px;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

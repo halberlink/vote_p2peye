@@ -2,9 +2,8 @@
   <div class="ui-tjinfo">
     <mt-header title="推荐人信息">
     </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div>
     <div class="ui-tj">
-      <div class="ui-tit">推荐人</div>
+      <div class="ui-tit">候选人</div>
       <div class="ui-people">
         <div class="face">
           <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
@@ -27,10 +26,10 @@
         </div>
       </div>
     </div>
-    <div class="ui-des">
-      <div class="ui-tit">推荐语</div>
-      <div class="des">{{peopleInfo.reason}}</div>
-    </div>
+    <!--<div class="ui-des">-->
+      <!--<div class="ui-tit">推荐语</div>-->
+      <!--<div class="des">{{peopleInfo.reason}}</div>-->
+    <!--</div>-->
   </div>
 
 </template>
@@ -41,7 +40,12 @@
     name: 'tjInfo_m',
     data () {
       return {
-        peopleInfo:{},
+        peopleInfo:{
+          name:'--',
+          job:'--',
+          type:0,
+          reason:'--'
+        },
         lock:false,
         openSocket:false,
         websock:null
@@ -68,7 +72,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
