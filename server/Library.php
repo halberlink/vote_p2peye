@@ -140,7 +140,7 @@ class module
 	            $_reset = '运维';
 	            break;
 	        default:
-	        	$_reset = '前端';
+	        	$_reset = '未定义';
 	            break;
 	    }
 
