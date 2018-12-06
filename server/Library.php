@@ -335,7 +335,8 @@ class module
 			}
 
 			foreach ($peoplesVoteNumber as $key => $item) {
-				
+				var_dump($item);
+				var_dump(count($item));
 				if(count($item)>=3){
 					$count = array_sum($item);
 					$max = max($item);
