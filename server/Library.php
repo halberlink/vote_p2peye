@@ -154,7 +154,9 @@ class module
 
 		$res = self::queryMysql("select * from peoples where status ='0'");
 
-		$res = current($res);
+		$randNumber = rand(0,count($res)-1);
+
+		$res = $res[$randNumber];
 
 		$res = self::queryMysql("UPDATE peoples SET status='1' where name = '".$res['name']."'");
 
@@ -220,8 +222,9 @@ class module
 			return self::formartCode($interfaceType,4300,'',"success!");			
 		}
 
+		$randNumber = rand(0,count($res_will)-1);
 
-		$res_will = current($res_will);
+		$res_will = $res_will[$randNumber];
 
 		$res_will_name = $res_will['name'];
 
@@ -335,8 +338,7 @@ class module
 			}
 
 			foreach ($peoplesVoteNumber as $key => $item) {
-				var_dump($item);
-				var_dump(count($item));
+
 				if(count($item)>=3){
 					$count = array_sum($item);
 					$max = max($item);
