@@ -336,7 +336,7 @@ class module
 
 			foreach ($peoplesVoteNumber as $key => $item) {
 				
-				if(count($item)>3){
+				if(count($item)>=3){
 					$count = array_sum($item);
 					$max = max($item);
 					$min = min($item);
