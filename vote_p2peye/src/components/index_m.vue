@@ -42,6 +42,10 @@
     methods:{
       clear:function(){
         localStorage.clear();
+        _this.$message({
+          message: "清除成功",
+          type: 'success'
+        });
       },
       register:function(){
 

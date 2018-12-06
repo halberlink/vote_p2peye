@@ -250,7 +250,11 @@
             break;
           case "insert":
             if(event.code == 200){
-              this.PeopleData.push(this.InsertData);
+              var getPeoplesdata = {
+                "interface" : 'getPeoples',
+                data : ''
+              }
+              this.websocketsend(getPeoplesdata);
             }else{
               _this.$message({
                 message: event.message,
