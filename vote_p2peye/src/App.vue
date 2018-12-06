@@ -18,4 +18,12 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+.ui-listtitle{
+	line-height: 70px;
+	border-bottom: 1px solid #eee;
+	font-size: 30px;
+	color: #333;
+	text-align: left;
+	padding-left: 30px;
+}
 </style>

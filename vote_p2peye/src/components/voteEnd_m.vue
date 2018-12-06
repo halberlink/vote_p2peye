@@ -12,21 +12,13 @@
           <div class="name">{{peopleInfo.job}}-{{peopleInfo.name}}</div>
         </div>
         <div class="vote-num">
-          <div class="key">评分：</div>
+          <div class="key">当前评分：</div>
           <div class="value">
-            <span>{{rangeValue}}</span>
+            <span>{{peopleInfo.count}}</span>
 
           </div>
         </div>
-        <mt-range v-model="rangeValue"
-                  :min="0"
-                  :max="10"
-                  :step="1">
-          <div slot="start">0</div>
-          <div slot="end">10</div>
-        </mt-range>
       </div>
-      <mt-button @click="subValue" size="large" type="primary">提交评分</mt-button>
     </div>
     <div class="vote-history">
       <div class="ui-tit">历史得分</div>
@@ -82,10 +74,12 @@
       this.initWebSocket();
     },
     beforeDestroy:function(){
-      console.log("投票中")
       this.websock.close()
     },
     methods:{
+      resetVote:function(){
+        this.$router.replace('/tjInfo_m')
+      },
       subValue:function(){
         var _this = this;
 
@@ -97,7 +91,7 @@
             count:this.rangeValue
           }
         };
-        console.log("vote")
+
         this.websocketsend(Data)
       },
       initWebSocket(){ //初始化weosocket
@@ -136,41 +130,24 @@
             //获取进程状态
             if(event.code == 200){
 
-//              for(let i in event.data.online){
-//                if(event.data.online[i].id == this.userInfo.id && event.data.online[i].vote_state == 1){
-//                  this.$router.replace("/voteEnd_m");
-//                }
-//              }
-
-
+              //被投票人
               this.peopleInfo = event.data.ing[0];
 
               localStorage.setItem("ingStatus",this.peopleInfo.status)
+              //历史投票
+              console.log("endvote")
               this.historyList = [];
               for(var name in event.data.history){
-                 if( event.data.history[name].from_id == this.userInfo.id){
+                //只拿当前评选人的历史
+                if( event.data.history[name].from_id == this.userInfo.id){
                   this.historyList.push(event.data.history[name]);
+                  //在当前评选人的历史中 拿到当前候选人的得分
+                  if( event.data.history[name].to_id == this.peopleInfo.id){
+                    this.peopleInfo.count = event.data.history[name].count
+                  }
                 }
+
               }
-            }else{
-              _this.$message({
-                message: event.message,
-                type: 'error'
-              });
-            }
-
-            break;
-          case "vote":
-            //获取进程状态
-            if(event.code == 200){
-
-              console.log(event.data.from_id,this.userInfo.id)
-              if(event.data.from_id == this.userInfo.id){
-                this.websock.close()
-                this.$router.replace("/voteEnd_m");
-              }
-
-
             }else{
               _this.$message({
                 message: event.message,
@@ -182,7 +159,15 @@
           case "next":
             //获取进程状态
             if(event.code == 200){
-              this.$router.replace("/tjInfo_m");
+              this.websock.close()
+              this.$router.replace("/tjInfo_m")
+            }else if(event.code == 4300){
+              _this.$message({
+                message: "没有更多了",
+                type: 'error'
+              });
+
+              
 
             }else{
               _this.$message({

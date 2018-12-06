@@ -24,11 +24,16 @@
         username:"",
         password:'',
         lock:false,
-        timers:null
+        timers:null,
+        openSocket:false,
+        websock:null
       }
     },
     created:function(){
-//      this.initWebSocket();
+      this.initWebSocket();
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
       register:function(){
@@ -47,41 +52,29 @@
           name : this.username.trim(),
         };
 
-        var postData = this.$qs.stringify(Data);
+
 
         this.lock = true;
-        this.$http.post("http://192.168.9.215/server/register.php",postData,{
-          headers:{'Content-Type':'application/x-www-form-urlencoded'}
-        }).then(function(res){
-          if(res.data.code == 200){
-            Toast({
-              message: '录入成功！',
-              position: 'middle',
-              duration: 2000
-            });
-            localStorage.setItem("voteUser",Data.name);
-            _this.$router.push('/waitVote_m')
-          }else{
-            Toast({
-              message:  res.data.message,
-              position: 'middle',
-              duration: 2000
-            });
-          }
-          _this.lock = false;
-        }).catch(function(res){
-          _this.lock = false;
-          Toast({
-            message:  "服务异常，请稍后再试",
-            position: 'middle',
-            duration: 2000
-          });
 
-        });
+
+        var loginData = {
+          "interface":"register",
+          "data":Data
+        }
+        console.log(Data)
+        if(this.openSocket){
+          console.log(222222222)
+          this.websocketsend(loginData);
+        }else{
+          _this.$message({
+            message: "socket未连接",
+            type: 'error'
+          });
+        }
       },
       initWebSocket(){ //初始化weosocket
-        console.log("insocket")
-        const wsuri = "ws://192.168.0.13:9527";//ws地址
+
+        const wsuri = "ws://192.168.5.156:9527/?0";//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -93,6 +86,7 @@
 
       websocketonopen() {
         console.log("WebSocket连接成功");
+        this.openSocket = true;
       },
       websocketonerror(e) { //错误
         console.log("WebSocket连接发生错误");
@@ -102,15 +96,38 @@
         //注意：长连接我们是后台直接1秒推送一条数据，
         //但是点击某个列表时，会发送给后台一个标识，后台根据此标识返回相对应的数据，
         //这个时候数据就只能从一个出口出，所以让后台加了一个键，例如键为1时，是每隔1秒推送的数据，为2时是发送标识后再推送的数据，以作区分
-        console.log(event.data);
+        var _this = this;
+        event = JSON.parse(event.data)
+        console.log(event)
+        switch (event.interface){
+          case "register":
+            if(event.code == 200){
+              var userInfo  = event.data;
+
+              this.$store.commit("changelogin",{
+                isLogin:true
+              })
+              if(userInfo.id != 30 && userInfo.uname == this.username.trim()){
+                localStorage.setItem("userInfo",JSON.stringify(userInfo));
+                this.$router.replace("/waitVote_m")
+              }
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+            this.lock = true;
+            break;
+        }
       },
 
       websocketsend(agentData){//数据发送
-        this.websock.send(this.username);
+        this.websock.send(JSON.stringify(agentData));
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
       },
     }
   }

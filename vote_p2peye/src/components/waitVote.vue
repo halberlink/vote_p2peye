@@ -1,47 +1,55 @@
 <template>
   <div class="ui-waitvote">
-    <mt-header title="评选人等待投票">
-    </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div>
-    <div class="ui-Candidate">
-      <div class="ui-tit">候选人</div>
-      <div class="ui-list">
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
+    <!-- <mt-header title="评选人等待投票">
+    </mt-header> -->
+    <banner></banner>
+    <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
+    <div class="ui-content">
+      <div class="ui-main">
+        <div class="ui-Candidate ui-contentbg">
+          <div class="ui-listtitle">候选人</div>
+          <div class="ui-list">
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+            <div class="ui-list-item">
+              <div class="ui-face"></div>
+              <div class="ui-name">张三</div>
+            </div>
+          </div>
+          <div class="enter-key" @click="startVote">下一环节</div>
         </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
+        <div class="ui-judges">
+          <div class="ui-listtitle">评委席</div>
+          <div class="ui-list">
+            <div class="ui-list-item" v-for="item in jugeList">
+              <div class="ui-chair">
+                <div class="ui-name">{{item.uname}}</div>
+              </div>
+              <!--<div class="ui-voted"></div>-->
+            </div>
+          </div>
         </div>
       </div>
-      <div class="enter-key" @click="startVote"></div>
-    </div>
-    <div class="ui-judges">
-      <div class="ui-tit">评委席</div>
-      <div class="ui-list">
-        <div class="ui-list-item" v-for="item in jugeList">
-          <div class="ui-chair">
-            <div class="ui-name">{{item.uname}}</div>
-          </div>
-          <!--<div class="ui-voted"></div>-->
-        </div>
+      <div :class="isFixd?'countList fixd':'countList static'">
+        <DataList :dataList="sortList"></DataList>
       </div>
     </div>
   </div>
@@ -50,6 +58,8 @@
 
 <script>
   import { Toast } from 'mint-ui';
+  import DataList from './common/countList.vue'
+  import banner from './common/banner';
   export default {
     name: 'waitVote',
     data () {
@@ -59,11 +69,41 @@
         password:'',
         lock:false,
         openSocket:false,
-        jugeList:[]
+        jugeList:[],
+        dataList:[],
+        websock:null,
+        isFixd:false
+      }
+    },
+    components:{
+      DataList,
+      banner
+    },
+    computed:{
+      sortList:function(){
+        return this.dataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){
+      var _this = this;
       this.initWebSocket();
+
+
+      window.addEventListener('scroll',function(){
+        var st = document.documentElement.scrollTop || document.body.scrollTop;
+        if(st <= 225){
+          _this.isFixd = false
+        }else{
+          _this.isFixd = true
+        }
+      },false);
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
       jumpTo:function(url){
@@ -80,7 +120,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.5.154:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -106,7 +146,6 @@
 
         event = JSON.parse(event.data)
         console.log(event)
-
         switch (event.interface){
           case "info":
             //获取进程状态
@@ -129,10 +168,22 @@
             //获取进程状态
             if(event.code == 200){
               localStorage.setItem("status",event.data.status);
-              this.$store.commit("changevote",{
-                status:event.data.status
-              })
-              this.$router.push("/vote_m")
+
+              this.$router.replace("/tjInfo");
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "rank":
+            //获取进程状态
+            if(event.code == 200){
+              localStorage.setItem("status",event.data.status);
+
+
             }else{
               _this.$message({
                 message: event.message,
@@ -150,7 +201,7 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
+
         this.openSocket = false
       },
       startVote(){
@@ -174,7 +225,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    background: #fafafa;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

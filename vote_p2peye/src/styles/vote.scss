@@ -1,21 +1,19 @@
 .ui-waitvote {
   font-size: 20px;
   .ui-Candidate {
-    width:1140px;
+    width:1200px;
 
     margin:0 auto;
-    background: #ffffff;
-    padding: 0 50px;
-    padding-bottom: 20px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 16px;
+    background-color: #fff;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
     margin-bottom:20px;
     position: relative;
     min-height: 360px;
+    box-shadow: 0 2px 4px 0 rgba(7,17,27,.1);
     .ui-people {
       width:650px;
-      padding:0 20px;
+      padding:20px 30px;
       display: flex;
       justify-content: flex-start;
       align-items: flex-start;
@@ -67,31 +65,46 @@
   }
   .enter-key {
     width: 215px;
-    height: 202px;
-    background: url("../assets/enter-icon.png") no-repeat center;
-    position: absolute;
-    bottom:30px;
-    right:30px;
+    height: 100px;
+    line-height: 160px;
+    text-align: center;
+    background-color: #ffce91;
+    border-bottom: 20px solid #e04786;
+    border-radius: 40px;
+    transition: all .05s ease-out;
+    font-size: 60px;
+    color: #e04786;
+    user-select: none;
+    box-shadow: 5px 5px 40px rgba(100,100,100,0.6);
     cursor: pointer;
+    position: absolute;
+    bottom:80px;
+    right:30px;
+    &:active{
+      margin-top: 110px;
+      border-bottom-width: 10px;
+      box-shadow: 5px 5px 20px rgba(100,100,100,0.6);
+    }
   }
   .ui-judges {
-    width:1140px;
+    width:1200px;
     margin:0 auto;
     background: #ffffff;
-    padding: 0 50px;
     padding-bottom: 20px;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 16px;
     margin-bottom:20px;
+    box-shadow: 0 2px 4px 0 rgba(7,17,27,.1);
     .ui-list {
-
+        padding: 0 30px 10px;
       display: flex;
       flex-wrap: wrap;
     }
     .ui-list-item {
-      width:184px;
-      height:100px;
+      width:16.66%;
+      height:90px;
+      margin-top: 20px;
       position: relative;
       flex-direction: row;
       justify-content: center;
@@ -118,7 +131,7 @@
     .ui-name {
       line-height: 62px;
       color: #fff;
-      font-size: 25px;
+      font-size: 24px;
     }
   }
 }

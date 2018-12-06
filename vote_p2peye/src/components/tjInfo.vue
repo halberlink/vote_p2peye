@@ -1,10 +1,11 @@
 <template>
-  <div class="ui-tjinfo">
-    <mt-header title="推荐人信息">
+  <div class="ui-waitvote">
+    <!-- <mt-header title="评选人信息公示">
     </mt-header>
-    <div @click="jumpTo('/InformationEntry')">213</div>
-    <div class="ui-tj">
-      <div class="ui-tit">推荐人</div>
+    <div @click="jumpTo('/InformationEntry')">213</div> -->
+    <banner></banner>
+    <div class="ui-Candidate ui-contentbg">
+      <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
         <div class="face">
           <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
@@ -18,18 +19,22 @@
             <div class="info-item-key">组：</div>
             <div class="info-item-value">{{peopleInfo.job}}</div>
           </div>
-
           <div class="info-item">
             <div class="info-item-key">类别 ：</div>
             <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
             <div class="info-item-value" v-else>老员工</div>
           </div>
+          <div class="info-item">
+            <div class="info-item-key">推荐语：</div>
+            <div class="info-item-value">{{peopleInfo.reason}}</div>
+          </div>
+
         </div>
       </div>
+      <div class="enter-key" @click="nextStep"></div>
     </div>
-    <div class="ui-des">
-      <div class="ui-tit">推荐语</div>
-      <div class="des">{{peopleInfo.reason}}</div>
+    <div class="countList">
+      <DataList :dataList="sortList"></DataList>
     </div>
   </div>
 
@@ -37,27 +42,56 @@
 
 <script>
   import { Toast } from 'mint-ui';
+  import banner from './common/banner';
+  import DataList from './common/countList.vue';
   export default {
-    name: 'tjInfo_m',
+    components:{
+      banner
+    },
+    name: 'tjInfo',
     data () {
       return {
-        peopleInfo:{},
+        username:"",
+        password:'',
         lock:false,
         openSocket:false,
+        peopleInfo:{type:1},
+        dataList:[],
         websock:null
+      }
+    },
+    components:{
+      DataList
+    },
+    computed:{
+      sortList:function(){
+        return this.dataList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
       }
     },
     created:function(){
       this.initWebSocket();
     },
     beforeDestroy:function(){
+      console.log("开始投票")
       this.websock.close()
     },
     methods:{
-      jumpTo:function(url){
-        this.$router.push(url)
-      },
-      register:function() {
+      nextStep:function() {
+        if(this.openSocket){
+          this.websocketsend({
+            "interface":"startVote",
+            "data":""
+          })
+        }else{
+          this.$message({
+            message: "socket未连接",
+            type: 'error'
+          });
+        }
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = {};
@@ -104,22 +138,12 @@
                 status:event.data.status
               })
               this.peopleInfo = event.data.ing[0];
-              //reset 投票 如果为最后一个的时候 结束
-              if(this.peopleInfo){
-                localStorage.setItem("ingStatus",this.peopleInfo.status)
-                if(event.data.ing[0].status == 2){
-                  this.$router.replace('/vote_m')
-                }
-              }else{
-                _this.$message({
-                  message: "全部都已投完！谢谢参与",
-                  type: 'error'
-                });
-              }
-
 
             }else{
-
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
             }
 
             break;
@@ -130,7 +154,7 @@
               this.$store.commit("changevote",{
                 status:event.data.status
               })
-              this.$router.replace("/vote_m");
+              this.$router.replace("/vote");
             }else{
               _this.$message({
                 message: event.message,
@@ -146,7 +170,6 @@
         this.websock.send(JSON.stringify(agentData));
 
       },
-
       websocketclose(e){ //关闭
 
         this.openSocket = false
@@ -164,5 +187,5 @@
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
-  @import "../styles/tjInfo_m.scss";
+  @import "../styles/vote.scss";
 </style>

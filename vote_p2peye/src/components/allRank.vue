@@ -4,57 +4,17 @@
     </mt-header> -->
     <banner></banner>
     <!-- <div @click="jumpTo('/InformationEntry')">213</div> -->
-    <div class="ui-Candidate ui-contentbg">
-      <div class="ui-listtitle">候选人</div>
-      <div class="ui-people">
-        <div class="face">
-          <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
-        </div>
-        <div class="info">
-          <div class="info-item">
-            <div class="info-item-key">姓名：</div>
-            <div class="info-item-value">{{peopleInfo.name}}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-item-key">组：</div>
-            <div class="info-item-value">{{peopleInfo.job}}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-item-key">入职时间：</div>
-            <div class="info-item-value">2018-12-01</div>
-          </div>
-          <div class="info-item">
-            <div class="info-item-key">推荐人：</div>
-            <div class="info-item-value">张某某</div>
-          </div>
-          <div class="info-item">
-            <div class="info-item-key">类别 ：</div>
-            <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
-            <div class="info-item-value" v-else>老员工</div>
-          </div>
-        </div>
+    <div class="ui-content">
+
+      <div class="countList static">
+        <DataList :dataList="oldsortList" name="评分实时榜单老员工"></DataList>
       </div>
-      <div class="enter-key" @click="nextStep" v-if="allvoted"> 下一环节</div>
-    </div>
-    <div class="ui-judges">
-      <div class="ui-listtitle">评委席</div>
-      <div class="ui-list">
-        <div class="ui-list-item" v-for="item in filterList">
-          <div class="ui-chair">
-            <div class="ui-name">{{item.uname}}</div>
-          </div>
-          <div class="ui-voted" v-if="item.vote_status == 1"></div>
-        </div>
+      <div class="countList static">
+        <DataList :dataList="newsortList" name="评分实时榜单新员工"></DataList>
       </div>
-    </div>
-    <div class="countList">
-      <DataList :dataList="newsortList" name="新员工"></DataList>
-    </div>
-    <div class="countList">
-      <DataList :dataList="oldsortList" name="老员工"></DataList>
-    </div>
-    <div class="countList">
-      <DataList :dataList="allortList" name="全部排行"></DataList>
+      <div class="countList static">
+        <DataList :dataList="allortList" name="评分实时榜单新员工"></DataList>
+      </div>
     </div>
   </div>
 
@@ -65,39 +25,26 @@
   import DataList from './common/countList.vue'
   import banner from './common/banner';
   export default {
-    name: 'vote',
+    name: 'allRank',
     data () {
       return {
+        msg: 'Welcome to Your Vue.js App',
         username:"",
         password:'',
         lock:false,
         openSocket:false,
         jugeList:[],
-        peopleInfo:{},
-        olddataList:[],
+        dataList:[],
         newdataList:[],
-        alldataList:[],
         websock:null,
-        votedList:[],
-        allvoted:true
+        isFixd:false
       }
     },
     components:{
-      DataList,banner
+      DataList,
+      banner
     },
     computed:{
-      filterList:function(){
-        var newList = [];
-        var temp = {};
-        for(let i in this.jugeList){
-          if(!temp[this.jugeList[i].id]){
-            newList.push(this.jugeList[i])
-            temp[this.jugeList[i].id] = true;
-          }
-
-        }
-        return newList;
-      },
       oldsortList:function(){
         return this.olddataList.sort(function(a,b){
           var x = a["count"];
@@ -121,32 +68,18 @@
       }
     },
     created:function(){
+      var _this = this;
       this.initWebSocket();
+
     },
     beforeDestroy:function(){
-      console.log("开始投票")
       this.websock.close()
     },
     methods:{
       jumpTo:function(url){
         this.$router.push(url)
       },
-      nextStep:function() {
-        var _this = this;
-        this.votedList = [];
-        if(this.openSocket){
-          this.websocketsend({
-            interface:"next",
-            data:''
-          });
-        }else{
-          _this.$message({
-            message: "socket未连接",
-            type: 'error'
-          });
-        }
-
-
+      register:function() {
       },
       initWebSocket(){ //初始化weosocket
         var userInfo = {};
@@ -170,6 +103,8 @@
       websocketonopen() {
         console.log("WebSocket连接成功");
         //进入房间通知
+
+
         this.openSocket = true
       },
       websocketonerror(e) { //错误
@@ -181,18 +116,11 @@
 
         event = JSON.parse(event.data)
         console.log(event)
-
-
         switch (event.interface){
           case "info":
             //获取进程状态
             if(event.code == 200){
 
-              this.jugeList = event.data.online;
-
-              this.peopleInfo = event.data.ing[0];
-
-              this.votedList = [];
               this.newdataList = [];
               this.olddataList = [];
               this.alldataList = [];
@@ -211,6 +139,10 @@
                   this.olddataList.push(countItem);
                 }
               }
+              this.$store.commit("changevote",{
+                status:event.data.status
+              })
+              this.jugeList = event.data.online;
 
             }else{
               _this.$message({
@@ -220,32 +152,12 @@
             }
 
             break;
-          case "vote":
-            //获取进程状态
-//            if(event.code == 200){
-//              this.votedList.push(1);
-//
-//            }else if(event.code == 4300){
-//              _this.$message({
-//                message: "没有更多了",
-//                type: 'error'
-//              });
-//              this.$router.push("/allRank")
-//
-//            }else{
-//              _this.$message({
-//                message: event.message,
-//                type: 'error'
-//              });
-//            }
-
-            break;
-          case "next":
+          case "start":
             //获取进程状态
             if(event.code == 200){
-              this.$router.replace("/tjInfo")
-            }else if(event.code == 4300){
-              this.$router.replace("/allRank")
+              localStorage.setItem("status",event.data.status);
+
+              this.$router.replace("/tjInfo");
             }else{
               _this.$message({
                 message: event.message,
@@ -254,7 +166,20 @@
             }
 
             break;
+          case "rank":
+            //获取进程状态
+            if(event.code == 200){
+              localStorage.setItem("status",event.data.status);
 
+
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
         }
       },
 
@@ -262,10 +187,25 @@
         this.websock.send(JSON.stringify(agentData));
 
       },
+
       websocketclose(e){ //关闭
 
         this.openSocket = false
       },
+      startVote(){
+        if(this.openSocket){
+          this.websocketsend({
+            "interface":"start",
+            "data":""
+          })
+        }else{
+          this.$message({
+            message: "socket未连接",
+            type: 'error'
+          });
+        }
+
+      }
     }
   }
 </script>
@@ -275,9 +215,13 @@
   html,body{
     background: #fafafa;
   }
+  .countList{
+    width: 500px;
+    height: 500px;
+    float: left;
+  }
 </style>
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
-  @import "../styles/vote.scss";
 </style>

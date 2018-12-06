@@ -24,11 +24,16 @@
         username:"",
         password:'',
         lock:false,
-        timers:null
+        timers:null,
+        websock:null
       }
     },
     created:function(){
       this.initWebSocket();
+
+    },
+    beforeDestroy:function(){
+      this.websock.close()
     },
     methods:{
       register:function(){
@@ -96,7 +101,7 @@
       },
       initWebSocket(){ //初始化weosocket
         console.log("insocket")
-        const wsuri = "ws://192.168.5.154:9527/?0";//ws地址
+        const wsuri = "ws://192.168.5.156:9527/?0";//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -122,17 +127,16 @@
         switch (event.interface){
           case "register":
             if(event.code == 200){
-              var userInfo  = JSON.stringify(event.data);
-              localStorage.setItem("userInfo",userInfo);
+              var userInfo  = event.data;
+              console.log(userInfo)
+              localStorage.setItem("userInfo",JSON.stringify(userInfo));
               this.$store.commit("changelogin",{
-                uid:event.data.id,
-                username:event.data.username
+                isLogin:true
               })
-
+              localStorage.setItem("ingStatus",0)
               if(event.data.id ==30){
-                this.$router.push("/InformationEntry")
-              }else{
-                this.$router.push("/waitVote")
+                this.$router.replace("/waitVote")
+//                this.$router.push("/InformationEntry")
               }
 
             }else{
@@ -152,7 +156,6 @@
       },
 
       websocketclose(e){ //关闭
-        console.log("connection closed (" + e.code + ")");
         this.openSocket = false
       },
     }
