@@ -36,6 +36,12 @@
       padding-bottom: px2rem(5px);
       border-bottom: 1px solid #666666;
       color: #ff9933;
+      input{
+        color: #ff9933;
+        border:none;
+        outline: none;
+        -webkit-appearance: none;//去掉默认样式
+      }
     }
 
   }

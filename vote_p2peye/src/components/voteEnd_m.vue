@@ -62,7 +62,7 @@
     },
     filters:{
       toNumber:function(value){
-        return value?Number(value)*10:0;
+        return value?parseInt(Number(value)):0;
       }
     },
     created:function(){

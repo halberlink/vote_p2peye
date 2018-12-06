@@ -15,17 +15,17 @@
         <div class="vote-num">
           <div class="key">评分：</div>
           <div class="value">
-            <span>{{rangeValue}}</span>
+            <input type="number" v-model="rangeValue"></input>
 
           </div>
         </div>
         <div class="vote-range">
           <mt-range v-model="rangeValue"
-                    :min="0"
-                    :max="10"
-                    :step="1">
-            <div slot="start">0</div>
-            <div slot="end">10</div>
+                    :min="0.0"
+                    :max="100"
+                    >
+            <div slot="start">0.0</div>
+            <div slot="end">100.0</div>
           </mt-range>
         </div>
       </div>
@@ -80,7 +80,7 @@
     },
     filters:{
       toNumber:function(value){
-        return value?Number(value)*10:0;
+        return value?parseInt(Number(value)):0;
       }
     },
     created:function(){
