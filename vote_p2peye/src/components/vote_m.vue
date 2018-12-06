@@ -12,21 +12,25 @@
           </div>
           <div class="name">{{peopleInfo.job}}-{{peopleInfo.name}}</div>
         </div>
-        <div class="vote-num">
-          <div class="key">评分：</div>
-          <div class="value">
-            <span>{{rangeValue/10}}</span>
+        <!--<div class="vote-num">-->
+          <!--<div class="key">评分：</div>-->
+          <!--<div class="value">-->
+            <!--<span>{{rangeValue/10}}</span>-->
 
-          </div>
+          <!--</div>-->
+        <!--</div>-->
+        <span class="currange">{{rangeValue/10}}</span>
+        <div class="ranglimit">
+          <span>0</span>
+          <span>10</span>
         </div>
         <div class="vote-range">
           <mt-range v-model="rangeValue"
                     :min="0"
                     :max="100"
                     :step="1"
+                    :bar-height="4"
                     >
-            <div slot="start">0</div>
-            <div slot="end">10</div>
           </mt-range>
         </div>
       </div>
@@ -36,20 +40,23 @@
     </div>
     <div class="vote-history">
       <div class="ui-tit">历史评分</div>
-      <div class="vote-history-item" v-for="item in historyList">
-        <div class="face">
-          <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
-        </div>
-        <div class="num">
-          <div class="name">
-            <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
-            <span class="percent">{{item.count}}</span>
+
+      <div class="history-scroll">
+        <div class="vote-history-item" v-for="item in historyList">
+          <div class="face">
+            <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
-          <div class="range">
-            <mt-progress :value="item.count | toNumber" :barHeight="10">
-              <div slot="start"></div>
-              <div slot="end"></div>
-            </mt-progress>
+          <div class="num">
+            <div class="name">
+              <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
+              <span class="percent">{{item.count}}</span>
+            </div>
+            <div class="range">
+              <mt-progress :value="item.count | toNumber" :barHeight="10">
+                <div slot="start"></div>
+                <div slot="end"></div>
+              </mt-progress>
+            </div>
           </div>
         </div>
       </div>
@@ -225,7 +232,11 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    width:100%;
+    height: 100%;
+    background: url("../assets/body_bg.jpg") no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
   }
 
 </style>

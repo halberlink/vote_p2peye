@@ -1,14 +1,26 @@
 .ui-waitvote {
-
+  color:#fff;
+  .ui-tit {
+    height:px2rem(100px);
+    line-height: px2rem(100px);
+    text-align: center;
+    font-size: px2rem(40px);
+    margin-bottom: px2rem(80px);
+  }
   .ui-Candidate {
     width:px2rem(690px);
+    min-height: px2rem(300px);
     margin:0 auto;
-    background: #ffffff;
+    background: -webkit-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -o-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -moz-linear-gradient(180deg, #a067ef, #f681e4);
+    background: linear-gradient(180deg, #a067ef, #f681e4);
     padding-bottom: px2rem(20px);
     -webkit-border-radius: px2rem(8px);
     -moz-border-radius: px2rem(8px);
     border-radius: px2rem(16px);
     margin-bottom:px2rem(20px);
+    margin-top:px2rem(20px);
     .ui-list {
       padding:0 px2rem(20px);
       width:px2rem(650px);
@@ -42,8 +54,12 @@
 
   .ui-judges {
     width:px2rem(690px);
+    min-height: px2rem(300px);
     margin:0 auto;
-    background: #ffffff;
+    background: -webkit-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -o-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -moz-linear-gradient(180deg, #a067ef, #f681e4);
+    background: linear-gradient(180deg, #a067ef, #f681e4);
     padding-bottom: px2rem(20px);
     -webkit-border-radius: px2rem(8px);
     -moz-border-radius: px2rem(8px);

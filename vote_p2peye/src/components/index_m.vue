@@ -12,7 +12,7 @@
      <mt-button @click="clear" size="large" type="primary">清除登录缓存</mt-button>
    </div>
    <div class="des">*请输入姓名作为评选人的标识，非评选人请勿输入！</div>
-   <div class="des">*为了保证投票流程顺利进行，整个评分过程中请不要进行返回操作如果发生连接失败 刷新页面即可 谢谢配合！</div>
+   <div class="des">*为了保证投票流程顺利进行，整个评分过程中请不要进行返回操作如果发生连接失败 刷新页面即可</div>
 
   </div>
 
@@ -153,7 +153,15 @@
     }
   }
 </script>
-
+<style>
+  html,body{
+    width:100%;
+    height: 100%;
+    background: url("../assets/body_bg.jpg") no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+  }
+</style>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" type="text/css" scoped>
 

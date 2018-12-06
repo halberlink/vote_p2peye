@@ -23,20 +23,22 @@
     </div>
     <div class="vote-history">
       <div class="ui-tit">历史得分</div>
-      <div class="vote-history-item" v-for="item in historyList">
-        <div class="face">
-          <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
-        </div>
-        <div class="num">
-          <div class="name">
-            <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
-            <span class="percent">{{item.count}}</span>
+      <div class="history-scroll">
+        <div class="vote-history-item" v-for="item in historyList">
+          <div class="face">
+            <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
-          <div class="range">
-            <mt-progress :value="item.count | toNumber" :barHeight="10">
-              <div slot="start"></div>
-              <div slot="end"></div>
-            </mt-progress>
+          <div class="num">
+            <div class="name">
+              <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
+              <span class="percent">{{item.count}}</span>
+            </div>
+            <div class="range">
+              <mt-progress :value="item.count | toNumber" :barHeight="10">
+                <div slot="start"></div>
+                <div slot="end"></div>
+              </mt-progress>
+            </div>
           </div>
         </div>
       </div>
@@ -197,11 +199,21 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    width:100%;
+    height: 100%;
+    background: url("../assets/body_bg.jpg") no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
   }
 </style>
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
   @import "../styles/vote_m.scss";
+  .vote-history {
+    height:px2rem(850px);
+  }
+  .history-scroll {
+    height:px2rem(850px);
+  }
 </style>

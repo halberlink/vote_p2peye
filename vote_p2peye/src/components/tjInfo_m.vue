@@ -15,12 +15,12 @@
             <div class="info-item-value">{{peopleInfo.name}}</div>
           </div>
           <div class="info-item">
-            <div class="info-item-key">组：</div>
+            <div class="info-item-key">所属：</div>
             <div class="info-item-value">{{peopleInfo.job}}</div>
           </div>
 
           <div class="info-item">
-            <div class="info-item-key">类别 ：</div>
+            <div class="info-item-key">类别：</div>
             <div class="info-item-value" v-if="peopleInfo.type == 1">新员工</div>
             <div class="info-item-value" v-else>老员工</div>
           </div>
@@ -163,7 +163,12 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    width:100%;
+    height: 100%;
+    background: url("../assets/body_bg.jpg") no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+
   }
 </style>
 <style lang="scss" type="text/css" scoped>

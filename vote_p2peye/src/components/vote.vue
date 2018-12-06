@@ -286,7 +286,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #fafafa;
+    background: #eee3ff;
   }
   .fl{
     float: left;
@@ -296,7 +296,12 @@
   }
   .countList{
     width: 340px;
-    height:320px;
+    height:358px;
+    overflow: hidden;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    -webkit-box-shadow: 0 2px 4px 0 rgba(7, 17, 27, 0.1);
+    box-shadow: 0 2px 4px 0 rgba(7, 17, 27, 0.1);
   }
 </style>
 <style lang="scss" type="text/css" scoped>

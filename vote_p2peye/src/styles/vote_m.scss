@@ -1,15 +1,46 @@
+@font-face {
+  font-family:P2peyeSelfFont;
+  font-weight: bold;
+  src:url("../styles/font/DINAlternateBold.ttf");
+}
 .ui-vote {
   font-size: px2rem(30px);
+  color:#fff;
+  .ranglimit {
+    padding: 0 px2rem(5px);
+    display: flex;
+    justify-content: space-between;
+  }
+  .ui-tit {
+    height:px2rem(60px);
+    line-height: px2rem(100px);
+    text-align: center;
+    font-size: px2rem(40px);
+  }
   .vote-info {
     width:px2rem(650px);
     margin:0 auto;
-    background: #ffffff;
+    background: -webkit-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -o-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -moz-linear-gradient(180deg, #a067ef, #f681e4);
+    background: linear-gradient(180deg, #a067ef, #f681e4);
+    -webkit-box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.7);
+    box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.7);
     padding:0 px2rem(20px);
     padding-bottom: px2rem(20px);
     -webkit-border-radius: px2rem(8px);
     -moz-border-radius: px2rem(8px);
     border-radius: px2rem(16px);
     margin-bottom:px2rem(20px);
+    margin-top: px2rem(20px);
+  }
+  .currange {
+    display: block;
+    font-size: px2rem(180px);
+    margin-bottom: px2rem(60px);
+    font-family:"P2peyeSelfFont" ;
+
   }
   .vote-people {
     margin-bottom:px2rem(40px);
@@ -22,6 +53,7 @@
   }
   .vote-range {
     padding:0 px2rem(25px);
+    margin-bottom: px2rem(20px);
   }
   .vote-num {
     display: flex;
@@ -34,7 +66,7 @@
       line-height: px2rem(70px);
       font-size: px2rem(40px);
       padding-bottom: px2rem(5px);
-      border-bottom: 1px solid #666666;
+      border-bottom: 1px solid #fff;
       color: #ff9933;
       input{
         color: #ff9933;
@@ -77,9 +109,14 @@
   .vote-history {
     width:px2rem(650px);
     margin:0 auto;
-    background: #ffffff;
-    padding:0 px2rem(20px);
-    padding-bottom: px2rem(20px);
+    -webkit-box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.4);
+    -moz-box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.7);
+    box-shadow: 0 0 px2rem(100px) rgba(0,0,0,0.7);
+    background: -webkit-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -o-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -moz-linear-gradient(180deg, #a067ef, #f681e4);
+    background: linear-gradient(180deg, #a067ef, #f681e4);
+    padding:px2rem(20px);
     -webkit-border-radius: px2rem(8px);
     -moz-border-radius: px2rem(8px);
     border-radius: px2rem(16px);
@@ -112,6 +149,10 @@
       background: url("../assets/old-icon.png") no-repeat center;
       -webkit-background-size: contain;
       background-size: contain;
+    }
+    .history-scroll {
+      height:px2rem(350px);
+      overflow-y: scroll;
     }
     .vote-history-item {
       display: flex;

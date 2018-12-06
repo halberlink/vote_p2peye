@@ -158,7 +158,11 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #cccccc;
+    width:100%;
+    height: 100%;
+    background: url("../assets/body_bg.jpg") no-repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

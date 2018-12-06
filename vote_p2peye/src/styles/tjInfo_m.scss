@@ -1,22 +1,35 @@
 .ui-tjinfo {
   font-size: px2rem(30px);
+  color: #ffffff;
   .ui-tj {
     width:px2rem(690px);
     height:px2rem(810px);
     margin:0 auto;
-    background: #ffffff;
+    background: -webkit-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -o-linear-gradient(180deg, #a067ef, #f681e4);
+    background: -moz-linear-gradient(180deg, #a067ef, #f681e4);
+    background: linear-gradient(180deg, #a067ef, #f681e4);
     padding-bottom: px2rem(20px);
-    -webkit-border-radius: px2rem(8px);
-    -moz-border-radius: px2rem(8px);
+    -webkit-border-radius: px2rem(16px);
+    -moz-border-radius: px2rem(16px);
     border-radius: px2rem(16px);
     margin-bottom:px2rem(20px);
+    margin-top: px2rem(100px);
+    -webkit-box-shadow: 0 0 px2rem(100px) #a067ef;
+    -moz-box-shadow: 0 0 0 px2rem(100px) #a067ef;
+    box-shadow: 0 0 px2rem(100px) #a067ef;
     .ui-tit {
-      margin-bottom: px2rem(5px);
+      height:px2rem(100px);
+      line-height: px2rem(100px);
+      text-align: center;
+      font-size: px2rem(40px);
+      margin-bottom: px2rem(80px);
     }
     .ui-people {
       width:px2rem(650px);
       padding:0 px2rem(20px);
       display: flex;
+      flex-direction: column;
       justify-content: flex-start;
       align-items: center;
     }
@@ -28,6 +41,7 @@
       border-radius: 50%;
       background: #947ee8;
       margin-right:px2rem(20px);
+      margin-bottom: px2rem(80px);
       position: relative;
     }
     .face-icon {
@@ -50,8 +64,7 @@
       background-size: contain;
     }
     .info {
-      width:px2rem(500px);
-      padding-top: px2rem(150px);
+      width:px2rem(400px);
       font-size: px2rem(60px);
       text-align: left;
       display: flex;
@@ -64,6 +77,10 @@
       justify-content: flex-start;
       flex-direction: row;
       align-items: center;
+    }
+    .info-item-key {
+      text-align: right;
+      width:px2rem(200px);
     }
   }
 

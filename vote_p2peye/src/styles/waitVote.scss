@@ -50,14 +50,14 @@
     height: 100px;
     line-height: 110px;
     text-align: center;
-    background-color: #ffce91;
-    border-bottom: 20px solid #e04786;
+    background-color: #09e;
+    border-bottom: 20px solid rgba(0,0,0,0.3);
     border-radius: 40px;
     transition: all .05s ease-out;
     font-size: 40px;
-    color: #e04786;
+    color: #fff;
     user-select: none;
-    box-shadow: 5px 5px 40px rgba(100,100,100,0.6);
+    box-shadow: 5px 5px 40px rgba(0,0,0,0.3);
     cursor: pointer;
     position: absolute;
     bottom:80px;
@@ -65,7 +65,7 @@
     &:active{
       margin-top: 110px;
       border-bottom-width: 10px;
-      box-shadow: 5px 5px 20px rgba(100,100,100,0.6);
+      box-shadow: 5px 5px 20px rgba(0,0,0,0.3);
     }
   }
   .ui-judges {

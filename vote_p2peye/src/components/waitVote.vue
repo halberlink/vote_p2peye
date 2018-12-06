@@ -233,7 +233,7 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style>
   html,body{
-    background: #fafafa;
+    background: #eee3ff;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

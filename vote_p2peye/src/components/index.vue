@@ -169,5 +169,5 @@
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
-  @import "../styles/index_m.scss";
+  @import "../styles/index.scss";
 </style>
