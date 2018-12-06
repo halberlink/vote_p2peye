@@ -8,8 +8,8 @@
       <div class="ui-Candidate ui-contentbg">
         <div class="ui-listtitle">候选人</div>
         <div class="ui-list">
-          <div class="ui-list-item" v-for="item in CandidateList ">
-            <div class="ui-face"></div>
+          <div class="ui-list-item" v-for="item in CandidateList">
+            <div class="ui-face"><img src="../assets/face.jpg" alt=""></div>
             <div class="ui-name">{{item.name}}</div>
           </div>
         </div>
@@ -99,7 +99,7 @@
           userInfo.id = 0;
         }
         console.log("insocket")
-        const wsuri = "ws://192.168.3.12:9527/?"+userInfo.id;//ws地址
+        const wsuri = "ws://192.168.5.156:9527/?"+userInfo.id;//ws地址
         this.websock = new WebSocket(wsuri);
         this.websock.onopen = this.websocketonopen;
 
@@ -112,7 +112,11 @@
       websocketonopen() {
         console.log("WebSocket连接成功");
         //进入房间通知
-
+        var getPeoplesdata = {
+          "interface" : 'getPeoples',
+          data : ''
+        }
+        this.websocketsend(getPeoplesdata);
 
         this.openSocket = true
       },
@@ -163,6 +167,17 @@
               localStorage.setItem("status",event.data.status);
 
 
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "getPeoples":
+            if(event.code == 200){
+              this.CandidateList = event.data;
             }else{
               _this.$message({
                 message: event.message,

@@ -13,6 +13,7 @@
       <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
         <div class="face">
+          <img src="../assets/face.jpg" alt="">
           <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="info">
@@ -31,7 +32,7 @@
           </div>
         </div>
       </div>
-      <div class="enter-key" @click="nextStep" v-if="allvoted">下一员工</div>
+      <div class="enter-key" @click="nextStep">下一员工</div>
     </div>
     <div class="ui-judges">
       <div class="ui-listtitle">评委席</div>
@@ -280,6 +281,7 @@
   }
   .countList{
     width: 340px;
+    height:320px;
   }
 </style>
 <style lang="scss" type="text/css" scoped>

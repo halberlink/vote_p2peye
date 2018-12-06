@@ -1,7 +1,6 @@
 <template>
   <div class="register">
-    <mt-header title="评选人登录">
-    </mt-header>
+    <banner></banner>
     <div class="content">
       <div class="info">
         <mt-field label="姓名" placeholder="请输入姓名" v-model="username"></mt-field>
@@ -16,6 +15,7 @@
 
 <script>
   import { Toast } from 'mint-ui';
+  import banner from './common/banner';
   export default {
     name: 'HelloWorld',
     data () {
@@ -27,6 +27,9 @@
         timers:null,
         websock:null
       }
+    },
+    components:{
+      banner
     },
     created:function(){
       this.initWebSocket();

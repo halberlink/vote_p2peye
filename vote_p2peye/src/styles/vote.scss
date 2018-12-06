@@ -72,7 +72,7 @@
     border-bottom: 20px solid #e04786;
     border-radius: 40px;
     transition: all .05s ease-out;
-    font-size: 0px;
+    font-size: 40px;
     color: #e04786;
     user-select: none;
     box-shadow: 5px 5px 40px rgba(100,100,100,0.6);
@@ -100,6 +100,7 @@
         padding: 0 30px 10px;
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
     }
     .ui-list-item {
       width:16.66%;

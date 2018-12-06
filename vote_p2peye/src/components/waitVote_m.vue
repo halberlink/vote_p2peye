@@ -5,29 +5,9 @@
     <div class="ui-Candidate">
       <div class="ui-tit">候选人</div>
       <div class="ui-list">
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
-        </div>
-        <div class="ui-list-item">
-          <div class="ui-face"></div>
-          <div class="ui-name">张三</div>
+        <div class="ui-list-item" v-for="item in CandidateList ">
+          <div class="ui-face"><img src="../assets/face.jpg" alt=""></div>
+          <div class="ui-name">{{item.name}}</div>
         </div>
       </div>
     </div>
@@ -57,6 +37,7 @@
         password:'',
         lock:false,
         jugeList:[],
+        CandidateList:[],
         openSocket:false,
         websock:null
       }
@@ -95,7 +76,11 @@
       websocketonopen() {
         console.log("WebSocket连接成功");
         //进入房间通知
-
+        var getPeoplesdata = {
+          "interface" : 'getPeoples',
+          data : ''
+        }
+        this.websocketsend(getPeoplesdata);
 
         this.openSocket = true
       },
@@ -136,6 +121,17 @@
               })
 
               this.$router.replace("/tjInfo_m");
+            }else{
+              _this.$message({
+                message: event.message,
+                type: 'error'
+              });
+            }
+
+            break;
+          case "getPeoples":
+            if(event.code == 200){
+              this.CandidateList = event.data;
             }else{
               _this.$message({
                 message: event.message,

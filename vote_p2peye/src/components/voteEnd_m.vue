@@ -7,6 +7,7 @@
       <div class="vote-people">
         <div class="vote-people-info">
           <div class="face">
+            <img src="../assets/face.jpg" alt="">
             <div :class="peopleInfo.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
           <div class="name">{{peopleInfo.job}}-{{peopleInfo.name}}</div>
@@ -166,7 +167,7 @@
                 message: "全部都已投完！谢谢参与",
                 type: 'error'
               });
-
+//              this.$router.replace("/allRank_m")
 
 
             }else{

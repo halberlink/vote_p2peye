@@ -11,6 +11,7 @@
       <div class="ui-listtitle">候选人</div>
       <div class="ui-people">
         <div class="face">
+          <img src="../assets/face.jpg" alt="">
           <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="info">
@@ -45,9 +46,6 @@
   import banner from './common/banner';
   import DataList from './common/countList.vue';
   export default {
-    components:{
-      banner
-    },
     name: 'tjInfo',
     data () {
       return {
