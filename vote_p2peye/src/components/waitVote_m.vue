@@ -171,4 +171,32 @@
 
   @import "../styles/common/base.scss";
   @import "../styles/waitVote_m.scss";
+  .mt-progress-progress {
+    -webkit-border-radius: 0.333rem;
+    -moz-border-radius: 0.333rem;
+    border-radius: 0.333rem;
+  }
+  .mt-range-thumb {
+    background-color: #dab567;
+  }
+  .mt-range-progress {
+    background-color: #dab567;
+    -webkit-border-radius: 0.333rem;
+    -moz-border-radius: 0.333rem;
+    border-radius: 0.333rem;
+  }
+  .mt-progress-runway{
+    -webkit-border-radius: 0.333rem;
+    -moz-border-radius: 0.333rem;
+    border-radius: 0.333rem;
+  }
+  .mt-range-runway {
+    border-color: #fff;
+    -webkit-border-radius: 0.333rem;
+    -moz-border-radius: 0.333rem;
+    border-radius: 0.333rem;
+  }
+  .mint-button--primary {
+    background-color: #dab567;
+  }
 </style>
