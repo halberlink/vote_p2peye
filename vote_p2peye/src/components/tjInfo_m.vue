@@ -6,6 +6,7 @@
       <div class="ui-tit">候选人</div>
       <div class="ui-people">
         <div class="face">
+          <img src="../assets/face.jpg" alt="">
           <div :class="peopleInfo.type == 1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
         </div>
         <div class="info">

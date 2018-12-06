@@ -4,7 +4,7 @@
     <div class="inseredPeople">
       <el-table
         :data="dataList"
-        height="550"
+        height="329"
         border
         style="width: 100%">
         <el-table-column

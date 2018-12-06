@@ -6,7 +6,10 @@
      <div class="info">
        <mt-field label="姓名" placeholder="请输入姓名" v-model="username"></mt-field>
      </div>
-     <mt-button @click="register" size="large" type="primary">进入评选</mt-button>
+     <div class="info">
+       <mt-button @click="register" size="large" type="primary">进入评选</mt-button>
+     </div>
+     <mt-button @click="clear" size="large" type="primary">清除登录缓存</mt-button>
    </div>
    <div class="des">*请输入姓名作为评选人的标识，非评选人请勿输入！</div>
    <div class="des">*整个评分过程中请不要进行返回操作如果发生连接失败 刷新页面即可 谢谢配合！</div>
@@ -18,7 +21,7 @@
 <script>
   import { Toast } from 'mint-ui';
   export default {
-    name: 'HelloWorld',
+    name: 'index_m',
     data () {
       return {
         msg: 'Welcome to Your Vue.js App',
@@ -37,6 +40,9 @@
       this.websock.close()
     },
     methods:{
+      clear:function(){
+        localStorage.clear();
+      },
       register:function(){
 
         var _this = this;

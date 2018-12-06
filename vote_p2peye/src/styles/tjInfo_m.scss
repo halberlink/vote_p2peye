@@ -2,7 +2,7 @@
   font-size: px2rem(30px);
   .ui-tj {
     width:px2rem(690px);
-    height:px2rem(410px);
+    height:px2rem(810px);
     margin:0 auto;
     background: #ffffff;
     padding-bottom: px2rem(20px);
@@ -18,7 +18,7 @@
       padding:0 px2rem(20px);
       display: flex;
       justify-content: flex-start;
-      align-items: flex-start;
+      align-items: center;
     }
     .face {
       width: px2rem(120px);
@@ -50,8 +50,9 @@
       background-size: contain;
     }
     .info {
-      width:px2rem(340px);
-      padding-top: px2rem(70px);
+      width:px2rem(500px);
+      padding-top: px2rem(150px);
+      font-size: px2rem(60px);
       text-align: left;
       display: flex;
       justify-content: center;
