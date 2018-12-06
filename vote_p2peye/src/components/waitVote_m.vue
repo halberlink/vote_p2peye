@@ -28,6 +28,8 @@
 </template>
 
 <script>
+
+  import 'mint-ui/lib/style.css'
   import { Toast } from 'mint-ui';
   export default {
     name: 'waitVote_m',

@@ -8,9 +8,8 @@ import router from './router'
 import axios from 'axios'
 import qs from 'qs'
 import Element from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
+
 import Mint from 'mint-ui';
-import 'mint-ui/lib/style.css'
 Vue.config.productionTip = false
 
 

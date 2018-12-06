@@ -38,6 +38,8 @@
 </template>
 
 <script>
+
+  import 'element-ui/lib/theme-chalk/index.css'
   import { Toast } from 'mint-ui';
   import DataList from './common/countList.vue'
   import banner from './common/banner';

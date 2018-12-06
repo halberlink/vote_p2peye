@@ -14,6 +14,8 @@
 </template>
 
 <script>
+
+  import 'element-ui/lib/theme-chalk/index.css'
   import { Toast } from 'mint-ui';
   import banner from './common/banner';
   export default {

@@ -72,6 +72,7 @@
 <script>
   import { Toast } from 'mint-ui';
   import { MessageBox } from 'mint-ui';
+  import 'mint-ui/lib/style.css'
   export default {
     name: 'vote_m',
     data () {
