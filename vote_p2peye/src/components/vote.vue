@@ -10,7 +10,7 @@
       <DataList :dataList="oldsortList" name="评分实时榜单老员工"></DataList>
     </div>
     <div class="ui-Candidate ui-contentbg">
-      <div class="ui-listtitle">候选人</div>
+      <div class="ui-listtitle">候选人：{{peopleInfo.name}} 唱票中</div>
       <div class="ui-people">
         <div class="face">
           <img src="../assets/face.jpg" alt="">

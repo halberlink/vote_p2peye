@@ -99,7 +99,7 @@
     methods:{
       subValue:function(){
         var _this = this;
-        
+
         MessageBox.confirm('确定提交当前评分？').then(action => {
           var Data = {
             interface : "vote",
