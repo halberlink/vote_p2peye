@@ -12,6 +12,15 @@ class module
 		self::$redis = new Redis();
 		self::$redis->connect('127.0.0.1', 16379);
 
+	}
+
+	public static function resetonlinePeople(){
+
+	}
+
+
+
+	public static function queryMysql($query){
 
 		$mysql_conf = array(
 		    'host'    => '192.168.2.10:3357', 
@@ -33,10 +42,6 @@ class module
 		    die("could not connect to the db:\n" .  mysql_error());
 		}
 
-
-	}
-
-	public static function queryMysql($query){
 		$sql = $query;
 		$res = mysql_query($sql);
 		if (!$res) {
@@ -45,7 +50,9 @@ class module
 
 		$isInsert = strstr($query, 'INSERT');
 
-		if(!$isInsert && $res){
+		$isUpdate = strstr($query, 'UPDATE');
+
+		if(!$isInsert && !$isUpdate && $res){
 
 			while ($row = mysql_fetch_assoc($res)) {
 			    $arr[]=$row;
@@ -57,6 +64,10 @@ class module
 		if(!isset($arr)){
 			$arr = array("0"=>"");
 		}
+
+		mysql_close($mysql_conn); 
+
+
 		return $arr;
 	}
 
@@ -75,22 +86,24 @@ class module
 			case 'register':
 				$jsonCallback = self::_register($data['data'],'register');
 				break;
-			
 			case 'insert' :
 				$jsonCallback = self::_insert($data['data'],'insert');
 				break;
-
 			case 'getPeoples' :
 				$jsonCallback = self::_getPeoples($data['data'],'getPeoples');
 				break;
-
 			case 'start' :
 				$jsonCallback = self::_start($data['data'],'start');
 				break;
 			case 'startVote' :
 				$jsonCallback = self::_startVote($data['data'],'startVote');
+				break;
 			case 'vote' :
 				$jsonCallback = self::_vote($data['data'],'vote');
+				break;
+			case 'next' :
+				$jsonCallback = self::_next($data['data'],'next');
+				break;
 		}
 
 		return $jsonCallback;
@@ -134,8 +147,6 @@ class module
 	    return $_reset;
 	}
 
-
-
 	public static function _start($data,$interfaceType)
 	{
 		self::$redis->set("poll_status","2");
@@ -156,8 +167,13 @@ class module
 	}
 
 	public static function _startVote($data,$interfaceType){
+
 		$res = self::queryMysql("select * from peoples where status ='1'")[0];
-		$res = self::queryMysql("UPDATE peoples SET status='2' where name = '".$res['name']."'");
+		if($res){
+			$res = self::queryMysql("UPDATE peoples SET status='2' where name = '".$res['name']."'");
+		}else{
+			return self::formartCode($interfaceType,4002,'',"error!");
+		}
 
 		if($res){
 			return self::formartCode($interfaceType,200,array("status"=>$res),"success!");
@@ -177,8 +193,10 @@ class module
 		$res = self::queryMysql("INSERT INTO poll (from_id,to_id,count) VALUES ('".$data['from_id']."','".$data['to_id']."','".$data['count']."') ");
 
 		if($res){
-			$res = self::queryMysql("select * from poll where from_id ='".$data['from_id']."' AND to_id = '".$data['to_id']."'");
-			return self::formartCode($interfaceType,200,$res,"success!");	
+
+			$voteCallbackData = array("info"=> json_decode(self::_info(json_decode(self::$onlinePeoples,true),'vote')),"from_id" => $data['from_id']);
+
+			return self::formartCode($interfaceType,200,$voteCallbackData,"success!");
 		}else{
 			return self::formartCode($interfaceType,4002,$res,"error!");	
 		}
@@ -186,7 +204,34 @@ class module
 
 	}
 
+	public static function _next($data,$interfaceType){
 
+		$res_now = self::queryMysql("select * from peoples where status ='2'");
+
+		
+
+		$res_now_name = $res_now[0]['name'];
+
+		self::queryMysql("UPDATE peoples SET status='3' where name = '".$res_now_name."'");
+
+		$res_will = self::queryMysql("select * from peoples where status ='0'");
+
+		if(empty($res_will[0])){
+			return self::formartCode($interfaceType,4300,'',"success!");			
+		}
+
+
+		$res_will = current($res_will);
+
+		$res_will_name = $res_will['name'];
+
+		self::queryMysql("UPDATE peoples SET status='1' where name = '".$res_will_name."'");
+
+		$res = self::queryMysql("select * from peoples where status ='1'");
+
+		return self::formartCode($interfaceType,200,$res,"success!");
+
+	}
 
 	public static function _info($data,$interfaceType){
 
@@ -197,34 +242,32 @@ class module
 			$status = self::$redis->get("poll_status");
 		}
 
-
 		$res = array();
 
 		$res['status'] = $status;
 
 		$res['online'] = array();
 
-		$ing = self::queryMysql("select * from peoples where status ='2'");
+		$ing = self::queryMysql("select * from peoples where status ='1' OR status='2'");
 
 		if($ing && !empty($ing)){
 			$ing = $ing[0];
 		}
 
-
-
 		foreach ($data as $key => $item) {
 
 			$uid = $data[$key]['name'];
 
-
-			if($uid > 0){
+			if($uid > 0 && $uid != 30){
 
 				$ret = self::queryMysql("select * from users where id ='".$uid."'");
 
-				if(!empty($ing)){
-					$ing = self::queryMysql("select * from poll where from_id ='".$uid."'")[0];
 
-					if($ing){
+				if(!empty($ing)){
+					$voteed = self::queryMysql("select * from poll where from_id ='".$uid."' AND to_id = '".$ing['id']."'")[0];
+
+
+					if($voteed){
 						$ret[0]['vote_status'] = 1;
 					}else{
 						$ret[0]['vote_status'] = 0;
@@ -232,8 +275,6 @@ class module
 
 				}
 
-
-				
 				array_push($res['online'],$ret[0]);
 
 			}
@@ -245,27 +286,84 @@ class module
 
 	    	$res['ing'] = self::queryMysql("select * from peoples where status ='1' OR status='2'");
 
-	    	foreach($res['ing'] as $key => $item){
+	    	if(!empty($res['ing'][0])){
+
+		    	foreach($res['ing'] as $key => $item){
 
 
-				$res['ing'][$key]['job'] = self::resetJob($item['job']);
+					$res['ing'][$key]['job'] = self::resetJob($item['job']);
 
+				}
 			}
 
 			$res['history'] = self::queryMysql("select * from poll");
 
-			foreach($res['history'] as $key => $item){
+			$peoplesVoteNumber = array();
 
-				$target = self::queryMysql("select * from peoples where id = '".$item['to_id']."'");
-				$target = $target[0];
+			if(count($res['history']) == 1 && empty($res['history'][0])){
 
-				$target['job'] = self::resetJob($target['job']);
+				
+			}else{
+				foreach($res['history'] as $key => $item){
+
+					$target = self::queryMysql("select * from peoples where id = '".$item['to_id']."'");
+
+					$target = $target[0];
 
 
-				$res['history'][$key]['to_info'] = $target;
+					$peoplesVoteNumber[$item['to_id']][] = $item['count'];
+					if(!empty($target)){
+
+						$target['job'] = self::resetJob($target['job']);
+					
+						$res['history'][$key]['to_info'] = $target;
+
+					}
+
+				}
+			}
+
+			$averageRank = array();
+
+			$votePeoples = self::queryMysql("select * from peoples");
+
+			$_votePeoples = array();
+
+			foreach ($votePeoples as $key => $item) {
+				$_votePeoples[$item['id']] = $item;
+				$_votePeoples[$item['id']]['job'] = self::resetJob($_votePeoples[$item['id']]['job']);
+			}
+
+			foreach ($peoplesVoteNumber as $key => $item) {
+				
+				if(count($item)>3){
+					$count = array_sum($item);
+					$max = max($item);
+					$min = min($item);
+					$len = count($item) - 2;
+
+					$average = ( $count - $max - $min ) / $len;
+
+					$average = number_format($average, 1);
+
+				}else{
+
+					$count = array_sum($item);
+					$len = count($item);
+					$average = $count / $len;	
+					$average = number_format($average, 1);
+
+				}
+				$averageRank[$key][] =  array(
+					'count' => $average, 
+					'info' => $_votePeoples[$key],
+				);
 
 			}
 
+			arsort($averageRank);
+
+			$res['rank'] = $averageRank;
 
 	    }
 
@@ -279,9 +377,10 @@ class module
 		if(!$uname){
 			return self::formartCode($interfaceType,4001,"","名字不能为空!");
 		}
-		$res = self::queryMysql("select * from users where uname ='".$uname."'");
+		$res = self::queryMysql("select * from users where uname ='".$uname."'")[0];
+
 		if(!empty($res)){
-			return self::formartCode($interfaceType,200,$res[0],"success!");
+			return self::formartCode($interfaceType,200,$res,"success!");
 		}
 		$res = self::queryMysql("INSERT INTO users (uname) VALUES ('".$uname."') ");
 
@@ -303,7 +402,6 @@ class module
 		if(!$uid || $uid != 30){
 			return self::formartCode($interfaceType,4003,'',"未登录或非管理员!");	
 		}
-
 
 		if(!$name || !$reason || !$job || !$type){
 			return self::formartCode($interfaceType,4008,'',"未登录或非管理员!");	
@@ -337,11 +435,6 @@ class module
 	}
 
 }
-
-
-/**
-* 
-*/
 
 
 

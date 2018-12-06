@@ -31,10 +31,13 @@ $ws->on('open', function ($ws, $request) {
 
     $leadersOnline=array();
 
+
+
     foreach ($ws->fds as $fd=>$fd_data) {
 
         array_push($leadersOnline,$fd_data);
     }
+
 
     module::$onlinePeoples = json_encode($leadersOnline);
 
@@ -55,7 +58,6 @@ $ws->on('open', function ($ws, $request) {
 $ws->on('message', function ($ws, $frame) {
     $msg = 'from' . $frame->fd . ":{$frame->data}\n";
     $sourceFd = $ws->fds->get($frame->fd);
-
     $ret = module::socket($frame->data);
     foreach ($ws->fds as $fd=>$fd_data) {
         $ws->push($fd, $ret);
