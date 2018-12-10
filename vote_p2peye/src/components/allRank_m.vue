@@ -5,11 +5,11 @@
       <div class="history-scroll">
         <div class="vote-history-item" v-for="item in sortList">
           <div class="face">
-            <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
+            <div :class="item.info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
           <div class="num">
             <div class="name">
-              <span>{{item.to_info.job}}-{{item.to_info.name}}</span>
+              <span>{{item.info.job}}-{{item.info.name}}</span>
               <span class="percent">{{item.count}}</span>
             </div>
             <div class="range">
@@ -128,14 +128,9 @@
               let RankCount = event.data.rank;
 
               for(let id in RankCount){
-                let countItem = {};
-                countItem.count = RankCount[id][0].count;
-                countItem.job = RankCount[id][0].info.job;
-                countItem.name = RankCount[id][0].info.name;
-                countItem.type = RankCount[id][0].info.type;
-                this.alldataList.push(countItem);
-
+                this.alldataList.push(RankCount[id][0]);
               }
+              console.log(this.alldataList)
             }else{
               _this.$message({
                 message: event.message,
@@ -198,8 +193,8 @@
   .vote-history {
     height:px2rem(850px);
   }
-  .history-scroll {
-    height:px2rem(850px);
+  .ui-vote .vote-history .history-scroll {
+    height:px2rem(790px);
   }
   .mt-progress-progress {
     -webkit-border-radius: 0.333rem;
