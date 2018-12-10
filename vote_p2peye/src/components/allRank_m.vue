@@ -132,6 +132,7 @@
                 countItem.count = RankCount[id][0].count;
                 countItem.job = RankCount[id][0].info.job;
                 countItem.name = RankCount[id][0].info.name;
+                countItem.type = RankCount[id][0].info.type;
                 this.alldataList.push(countItem);
 
               }
