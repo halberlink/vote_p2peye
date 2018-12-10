@@ -1,9 +1,7 @@
 <template>
   <div class="ui-vote">
-    <mt-header title="评选人投票">
-    </mt-header>
     <div class="vote-info">
-      <div class="ui-tit">当前得分</div>
+      <div class="ui-tit">投票完毕</div>
       <div class="vote-people">
         <div class="vote-people-info">
           <div class="face">
@@ -24,7 +22,7 @@
     <div class="vote-history">
       <div class="ui-tit">历史得分</div>
       <div class="history-scroll">
-        <div class="vote-history-item" v-for="item in historyList">
+        <div class="vote-history-item" v-for="item in sortList">
           <div class="face">
             <div :class="item.to_info.type==1?'face-icon-new face-icon':'face-icon-old face-icon'"></div>
           </div>
@@ -79,6 +77,15 @@
     },
     beforeDestroy:function(){
       this.websock.close()
+    },
+    computed:{
+      sortList:function(){
+        return this.historyList.sort(function(a,b){
+          var x = a["count"];
+          var y = b["count"];
+          return y-x;
+        });
+      }
     },
     methods:{
       resetVote:function(){
@@ -170,7 +177,7 @@
                 message: "全部都已投完！谢谢参与",
                 type: 'error'
               });
-//              this.$router.replace("/allRank_m")
+              this.$router.replace("/allRank_m")
 
 
             }else{
@@ -210,7 +217,7 @@
 <style lang="scss" type="text/css" scoped>
 
   @import "../styles/common/base.scss";
-  @import "../styles/vote_m.scss";
+  @import "../styles/voteEnd_m.scss";
   .vote-history {
     height:px2rem(850px);
   }

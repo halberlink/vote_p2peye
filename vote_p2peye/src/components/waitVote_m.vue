@@ -1,7 +1,5 @@
 <template>
   <div class="ui-waitvote">
-    <mt-header title="评选人等待投票">
-    </mt-header>
     <div class="ui-Candidate">
       <div class="ui-tit">候选人</div>
       <div class="ui-list">

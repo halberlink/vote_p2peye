@@ -88,8 +88,7 @@
           type:0,
           reason:'--'
         },
-        historyList:[
-        ],
+        historyList:[],
         websock:null
       }
     },
@@ -112,7 +111,7 @@
         }
         for(let i in this.sortList){
           if(this.sortList[i].to_info.name == curCountJuge.to_info.name){
-            document.querySelector(".history-scroll").scrollTop = parseInt(i/6)*320;
+            document.querySelector(".history-scroll").scrollTop = parseInt(i/5)*260;
             this.sortList.splice(i,1,curCountJuge);
             break;
           }
@@ -135,7 +134,6 @@
       }else{
         this.userInfo.id=0;
       }
-
 
       this.initWebSocket();
     },
@@ -290,21 +288,16 @@
   .curPeople .mt-progress-progress{
     background: #dab567;
   }
-</style>
-<style lang="scss" type="text/css" scoped>
-
-  @import "../styles/common/base.scss";
-  @import "../styles/vote_m.scss";
   .mt-progress-progress {
     -webkit-border-radius: 0.333rem;
     -moz-border-radius: 0.333rem;
     border-radius: 0.333rem;
   }
   .mt-range-thumb {
-    background-color: #dab567;
+    background-color: #dab567 !important;
   }
   .mt-range-progress {
-    background-color: #dab567;
+    background-color: #dab567 !important;
     -webkit-border-radius: 0.333rem;
     -moz-border-radius: 0.333rem;
     border-radius: 0.333rem;
@@ -323,4 +316,11 @@
   .mint-button--primary {
     background-color: #dab567;
   }
+</style>
+<style lang="scss" type="text/css" scoped>
+
+  @import "../styles/common/base.scss";
+  @import "../styles/vote_m.scss";
+
+
 </style>
